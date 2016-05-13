@@ -20,7 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
+import java.util.ArrayList;
 
 /**
  * Created by OwnSick on 13-05-2016.
@@ -30,12 +34,13 @@ public class GameScreen implements Screen {
     private final TCG game;
     private final Screen parentscr;
     Texture bgndTex;
-    Sprite bgndSprite;
+    Image bgndImage;
     SpriteBatch batch;
     Skin skin;
     Stage stage;
     OrthographicCamera camera;
     FillViewport viewport;
+    ArrayList<Clickable> objects = new ArrayList<Clickable>();
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -50,21 +55,31 @@ public class GameScreen implements Screen {
                 camera.viewportHeight * .5f, 0f);
         camera.update();
         viewport = new FillViewport(1024, 1024, camera);
-        batch = new SpriteBatch();
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         loadTextures();
+        loadStartingHand();
+        stage.addActor(bgndImage);
 
     }
 
+    // LOADING
     public void loadTextures(){
         bgndTex = new Texture("boardbackground.jpg");
-        bgndSprite = new Sprite(bgndTex);
-        bgndSprite.setOrigin(0, 0);
-        bgndSprite.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+        bgndImage = new Image(bgndTex);
+        bgndImage.setOrigin(0, 0);
+        bgndImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    public void loadStartingHand(){
+        //Hand hand = new Hand();
+        //if(hand instanceof Clickable)
+            //objects.add(hand);
+        objects.add(new Hand());
+        //TODO draw X cards
+    }
+
+    // END LOADING
     @Override
     public void show() {
     }
@@ -73,13 +88,15 @@ public class GameScreen implements Screen {
     public void render(float v) {
         Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
+        /*batch.begin();
             renderBackground();
-        batch.end();
+        batch.end();*/
     }
 
     public void renderBackground(){
-        bgndSprite.draw(batch);
+        //bgndSprite.draw(batch);
     }
     @Override
     public void resize(int i, int i1) {
