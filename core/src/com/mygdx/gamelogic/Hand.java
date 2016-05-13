@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.mygdx.gamelogic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,47 +13,54 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.mygdx.game.Clickable;
+import com.mygdx.game.GameScreen;
 
 /**
  * Created by OwnSick on 13-05-2016.
  */
 public class Hand implements Clickable {
-    TextButton textButton;
-    Stage stage;
+    TextButton normalModeButton;
     Skin skin;
-    final TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+    Stage stage;
+    final TextButton.TextButtonStyle normalGameStyle = new TextButton.TextButtonStyle();
 
-    public Hand(){
+    public Hand(GameScreen GS){
 
 
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         skin = new Skin();
-        Pixmap pixmap = new Pixmap(150, 100, Pixmap.Format.RGBA8888);
+
+        //TODO add number of cards received on arguments
+        //GS.addActorToStage(normalModeButton);
+
+
+        /*Pixmap pixmap = new Pixmap(40, 70, Pixmap.Format.RGBA8888);
+
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
         BitmapFont bfont = new BitmapFont();
         skin.add("default", bfont);
-        textButtonStyle.up = skin.newDrawable("white", Color.DARK_GRAY);
-        textButtonStyle.down = skin.newDrawable("white", Color.DARK_GRAY);
-        textButtonStyle.checked = skin.newDrawable("white", Color.DARK_GRAY);
-        textButtonStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
-        textButtonStyle.font = skin.getFont("default");
-        skin.add("default", textButtonStyle);
-        textButton = new TextButton("PLAY",textButtonStyle);
-        textButton.setPosition(165, 0);
-        stage.addActor(textButton);
+        normalGameStyle.up = skin.newDrawable("white", Color.BLUE);
+        normalGameStyle.down = skin.newDrawable("white", Color.BLUE);
+        normalGameStyle.checked = skin.newDrawable("white", Color.RED);
+        normalGameStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
+
+        normalGameStyle.font = skin.getFont("default");
+
+        normalModeButton = new TextButton("Normal Game", normalGameStyle);
+        normalModeButton.setPosition(25, 25);
+        stage.addActor(normalModeButton);*/
+
+
     }
 
-    //GETTERS
 
-    public Stage getStage(){
-        return stage;
-    }
     @Override
     public void setupClickListener() {
-       textButton.addListener(new ChangeListener() {
+       normalModeButton.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
 
             }
