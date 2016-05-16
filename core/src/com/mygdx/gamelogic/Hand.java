@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.Clickable;
 import com.mygdx.game.GameScreen;
 
+import java.util.ArrayList;
+
 /**
  * Created by OwnSick on 13-05-2016.
  */
@@ -24,6 +26,7 @@ public class Hand implements Clickable {
     Skin skin;
     Stage stage;
     final TextButton.TextButtonStyle normalGameStyle = new TextButton.TextButtonStyle();
+    ArrayList<Card> cards = new ArrayList<Card>();
 
     public Hand(GameScreen GS){
 
@@ -58,6 +61,10 @@ public class Hand implements Clickable {
     }
 
 
+
+    public void addCardsToHand(ArrayList<Card> toadd){
+        cards.addAll(toadd);
+    }
     @Override
     public void setupClickListener() {
        normalModeButton.addListener(new ChangeListener() {

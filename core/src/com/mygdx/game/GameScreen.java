@@ -30,6 +30,8 @@ public class GameScreen implements Screen {
     OrthographicCamera camera;
     FillViewport viewport;
     ArrayList<Clickable> objects = new ArrayList<Clickable>();
+    Deck MainDeck;
+    Hand hand;
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -49,6 +51,7 @@ public class GameScreen implements Screen {
 
         loadTextures();
         stage.addActor(bgndImage);  // Add Background to stage
+        loadStartingDeck();
         loadStartingHand();
 
 
@@ -64,12 +67,18 @@ public class GameScreen implements Screen {
         bgndImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+
+    public void loadStartingDeck(){
+        MainDeck = new Deck();
+        MainDeck.fill_deck_1();
+    }
     public void loadStartingHand(){
-        //Hand hand = new Hand();
-        //if(hand instanceof Clickable)
-            //objects.add(hand);
-        objects.add(new Hand(this));
-        //TODO draw X cards
+        hand = new Hand(this);
+        objects.add(hand);
+
+        ArrayList<Card> drawn = new ArrayList<Card>();
+        drawn = MainDeck.draw(1);
+        hand.addCardsToHand(drawn);
     }
 
     // END LOADING
