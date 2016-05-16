@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
         loadStartingHand();
 
 
-        System.out.println(stage.getActors());
+        //System.out.println(stage.getActors());
 
     }
 
@@ -73,11 +73,11 @@ public class GameScreen implements Screen {
         MainDeck.fill_deck_1();
     }
     public void loadStartingHand(){
-        hand = new Hand(this);
+        hand = new Hand();
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
-        drawn = MainDeck.draw(1);
+        drawn = MainDeck.draw(5);
         hand.addCardsToHand(drawn);
     }
 

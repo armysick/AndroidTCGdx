@@ -28,35 +28,7 @@ public class Hand implements Clickable {
     final TextButton.TextButtonStyle normalGameStyle = new TextButton.TextButtonStyle();
     ArrayList<Card> cards = new ArrayList<Card>();
 
-    public Hand(GameScreen GS){
-
-
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-        skin = new Skin();
-
-        //TODO add number of cards received on arguments
-        //GS.addActorToStage(normalModeButton);
-
-
-        /*Pixmap pixmap = new Pixmap(40, 70, Pixmap.Format.RGBA8888);
-
-        pixmap.setColor(Color.WHITE);
-        pixmap.fill();
-        skin.add("white", new Texture(pixmap));
-        BitmapFont bfont = new BitmapFont();
-        skin.add("default", bfont);
-        normalGameStyle.up = skin.newDrawable("white", Color.BLUE);
-        normalGameStyle.down = skin.newDrawable("white", Color.BLUE);
-        normalGameStyle.checked = skin.newDrawable("white", Color.RED);
-        normalGameStyle.over = skin.newDrawable("white", Color.LIGHT_GRAY);
-
-        normalGameStyle.font = skin.getFont("default");
-
-        normalModeButton = new TextButton("Normal Game", normalGameStyle);
-        normalModeButton.setPosition(25, 25);
-        stage.addActor(normalModeButton);*/
-
+    public Hand(){
 
     }
 
@@ -64,6 +36,12 @@ public class Hand implements Clickable {
 
     public void addCardsToHand(ArrayList<Card> toadd){
         cards.addAll(toadd);
+    }
+
+    //GETTERS
+
+    public ArrayList<Card> getCards(){
+        return cards;
     }
     @Override
     public void setupClickListener() {

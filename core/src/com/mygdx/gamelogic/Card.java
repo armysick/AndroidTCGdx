@@ -16,6 +16,11 @@ public class Card implements Clickable{
         this.eff=eff;
     }
 
+
+    //GETTERS
+    public String getName(){
+        return name;
+    }
     @Override
     public void setupClickListener() {
     }
