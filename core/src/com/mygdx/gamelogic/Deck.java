@@ -1,5 +1,9 @@
 package com.mygdx.gamelogic;
 
+import com.badlogic.gdx.graphics.Texture;
+
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 
 /**
@@ -12,10 +16,10 @@ public class Deck {
     }
 
     public void fill_deck_1(){
-        cards.add(new Minion("demo minion", new CardEffect()));
-        cards.add(new Minion("demo minion2", new CardEffect()));
-        cards.add(new Minion("demo minion3", new CardEffect()));
-        cards.add(new Minion("demo minion4", new CardEffect()));
+        cards.add(new Minion("demo minion", new CardEffect(), new Image(new Texture("demominion.jpg"))));
+        cards.add(new Minion("demo minion2", new CardEffect(), new Image(new Texture("demominion2.jpg"))));
+        //cards.add(new Minion("demo minion3", new CardEffect()));
+        //cards.add(new Minion("demo minion4", new CardEffect()));
     }
 
     public ArrayList<Card> draw(int qty){

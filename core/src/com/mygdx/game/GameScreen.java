@@ -50,12 +50,21 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         loadTextures();
-        stage.addActor(bgndImage);  // Add Background to stage
+        //stage.addActor(bgndImage);  // Add Background to stage
         loadStartingDeck();
         loadStartingHand();
+        ArrayList<Card> handcards = hand.getCards();
+        int coord_x=0, coord_y = 5;
+        for(int x = 0; x<handcards.size() ; x++){
+
+            handcards.get(x).getImage().setOrigin(0, 0);
+            handcards.get(x).getImage().setSize(Gdx.graphics.getWidth()/8, Gdx.graphics.getHeight()/6);
+            stage.addActor(handcards.get(x).getImage());
+            coord_x += 20;
+        }
 
 
-        //System.out.println(stage.getActors());
+        System.out.println(stage.getActors());
 
     }
 
@@ -77,7 +86,7 @@ public class GameScreen implements Screen {
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
-        drawn = MainDeck.draw(5);
+        drawn = MainDeck.draw(2);
         hand.addCardsToHand(drawn);
     }
 
