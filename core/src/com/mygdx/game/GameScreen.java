@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -24,6 +26,7 @@ public class GameScreen implements Screen {
     private final Screen parentscr;
     Texture bgndTex;
     Image bgndImage;
+    Image miniHand;
     SpriteBatch batch;
     Skin skin;
     Stage stage;
@@ -50,18 +53,22 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         loadTextures();
-        //stage.addActor(bgndImage);  // Add Background to stage
+        stage.addActor(bgndImage);  // Add Background to stage
         loadStartingDeck();
         loadStartingHand();
+        stage.addActor(miniHand);
+        /* Draw hand with cards
         ArrayList<Card> handcards = hand.getCards();
-        int coord_x=0, coord_y = 5;
+        int coord_x=Gdx.graphics.getWidth(), coord_y = 60;
+        Image temp;
         for(int x = 0; x<handcards.size() ; x++){
-
-            handcards.get(x).getImage().setOrigin(0, 0);
-            handcards.get(x).getImage().setSize(Gdx.graphics.getWidth()/8, Gdx.graphics.getHeight()/6);
-            stage.addActor(handcards.get(x).getImage());
-            coord_x += 20;
-        }
+            temp = handcards.get(x).getImage();
+            temp.setSize(40, 40);
+            coord_x -= (temp.getWidth() + 10); // separate cards
+            temp.setPosition(coord_x, coord_y);
+            stage.addActor(temp);
+            //coord_x += 20;
+        }*/
 
 
         System.out.println(stage.getActors());
@@ -82,6 +89,22 @@ public class GameScreen implements Screen {
         MainDeck.fill_deck_1();
     }
     public void loadStartingHand(){
+        //graphical
+        miniHand = new Image(new Texture("miniHand.jpg"));
+        miniHand.setSize(40, 40);
+        miniHand.setPosition(Gdx.graphics.getWidth()-(miniHand.getWidth() + 10), 78);
+
+        miniHand.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+                expandHand();
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y,int pointer, int button){
+
+            }
+        });
         hand = new Hand();
         objects.add(hand);
 
@@ -93,13 +116,21 @@ public class GameScreen implements Screen {
     // END LOADING
 
     // EDITORS
+
+    public void expandHand(){
+        System.out.println("oi");
+    }
     public void addActorToStage(Actor act){
         stage.addActor(act);
     }
     @Override
     public void show() {
+
     }
 
+    public void update(float delta){
+
+    }
     @Override
     public void render(float v) {
         Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
@@ -140,6 +171,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
     }
 }
