@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -38,6 +40,7 @@ public class GameScreen implements Screen {
     Deck MainDeck;
     Hand hand;
     boolean handExpandedFlag;
+    Sprite str;
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -123,6 +126,10 @@ public class GameScreen implements Screen {
     // EDITORS
 
     public void expandHand(){
+        Texture mH = new Texture("miniHand.jpg");
+        TextureRegion tr = new TextureRegion(new Texture("miniHand.jpg"), 80, 80);
+        str = new Sprite(tr);
+        str.setPosition(80, 80);
         handExpandedFlag = true;
         System.out.println("Hand expand");
 
@@ -145,14 +152,14 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        batch.begin();
+
         ArrayList<Card> handCards = hand.getCards();
 
         System.out.println("size: " + handCards.size());
         System.out.println("texture do zero: " + handCards.get(0).getImage());
 
-        stage.draw();
-        int x = 0, y = Gdx.graphics.getHeight();
+
+        /*int x = 0, y = Gdx.graphics.getHeight();
         for(int i = 0; i<handCards.size();i++){
             if(i < 4 && handExpandedFlag) {
                 System.out.println("entrou!!!!!");
@@ -160,7 +167,16 @@ public class GameScreen implements Screen {
                 x+=45;
                 y -= 45;
             }
+        }*/
+        stage.draw();
+
+        batch.begin();
+        System.out.println("flag: " + handExpandedFlag);
+        if(handExpandedFlag) {
+            System.out.println("entrou");
+            batch.draw(str, 80, 80);
         }
+
         batch.end();
         /*batch.begin();
             renderBackground();
