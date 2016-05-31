@@ -1,5 +1,6 @@
 package com.mygdx.gamelogic;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.game.Clickable;
 
@@ -9,7 +10,7 @@ import com.mygdx.game.Clickable;
 public class Card implements Clickable{
     private String name;
     private CardEffect eff;
-    private Image img;
+    private Texture img;
 
     public Card(){
     }
@@ -17,7 +18,7 @@ public class Card implements Clickable{
         this.name = name;
         this.eff = eff;
     }
-    public Card(String name, CardEffect eff, Image img){
+    public Card(String name, CardEffect eff, Texture img){
         this.name = name;
         this.eff=eff;
         this.img=img;
@@ -29,7 +30,7 @@ public class Card implements Clickable{
         return name;
     }
 
-    public Image getImage(){
+    public Texture getImage(){
         return this.img;
     }
     @Override

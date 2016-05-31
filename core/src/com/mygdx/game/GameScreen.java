@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -27,7 +28,8 @@ public class GameScreen implements Screen {
     Texture bgndTex;
     Image bgndImage;
     Image miniHand;
-    SpriteBatch batch;
+    Container<Image> bigHand;
+    SpriteBatch batch = new SpriteBatch();
     Skin skin;
     Stage stage;
     OrthographicCamera camera;
@@ -35,6 +37,7 @@ public class GameScreen implements Screen {
     ArrayList<Clickable> objects = new ArrayList<Clickable>();
     Deck MainDeck;
     Hand hand;
+    boolean handExpandedFlag;
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -57,6 +60,8 @@ public class GameScreen implements Screen {
         loadStartingDeck();
         loadStartingHand();
         stage.addActor(miniHand);
+
+        handExpandedFlag = false;
         /* Draw hand with cards
         ArrayList<Card> handcards = hand.getCards();
         int coord_x=Gdx.graphics.getWidth(), coord_y = 60;
@@ -118,7 +123,11 @@ public class GameScreen implements Screen {
     // EDITORS
 
     public void expandHand(){
-        System.out.println("oi");
+        handExpandedFlag = true;
+        System.out.println("Hand expand");
+
+        //bigHand
+        //TODO
     }
     public void addActorToStage(Actor act){
         stage.addActor(act);
@@ -136,7 +145,23 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        batch.begin();
+        ArrayList<Card> handCards = hand.getCards();
+
+        System.out.println("size: " + handCards.size());
+        System.out.println("texture do zero: " + handCards.get(0).getImage());
+
         stage.draw();
+        int x = 0, y = Gdx.graphics.getHeight();
+        for(int i = 0; i<handCards.size();i++){
+            if(i < 4 && handExpandedFlag) {
+                System.out.println("entrou!!!!!");
+                batch.draw(handCards.get(i).getImage(), x + 95, y - 95);
+                x+=45;
+                y -= 45;
+            }
+        }
+        batch.end();
         /*batch.begin();
             renderBackground();
         batch.end();*/
