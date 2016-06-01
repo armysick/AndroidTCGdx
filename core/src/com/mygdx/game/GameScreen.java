@@ -117,7 +117,7 @@ public class GameScreen implements Screen {
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
-        drawn = MainDeck.draw(2);
+        drawn = MainDeck.draw(8);
         hand.addCardsToHand(drawn);
     }
 
@@ -127,9 +127,9 @@ public class GameScreen implements Screen {
 
     public void expandHand(){
         Texture mH = new Texture("miniHand.jpg");
-        TextureRegion tr = new TextureRegion(new Texture("miniHand.jpg"), 80, 80);
+        TextureRegion tr = new TextureRegion(new Texture("miniHand.jpg"), mH.getWidth(), mH.getHeight());
         str = new Sprite(tr);
-        str.setPosition(80, 80);
+        str.setSize(20, 20);
         handExpandedFlag = true;
         System.out.println("Hand expand");
 
@@ -154,9 +154,7 @@ public class GameScreen implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
         ArrayList<Card> handCards = hand.getCards();
-
-        System.out.println("size: " + handCards.size());
-        System.out.println("texture do zero: " + handCards.get(0).getImage());
+        System.out.println("Hand cards size: " + handCards.size());
 
 
         /*int x = 0, y = Gdx.graphics.getHeight();
@@ -171,10 +169,28 @@ public class GameScreen implements Screen {
         stage.draw();
 
         batch.begin();
-        System.out.println("flag: " + handExpandedFlag);
+       // System.out.println("width: " + Gdx.graphics.getWidth());  // Width = 480
+       // System.out.println("height: " + Gdx.graphics.getHeight()); // Height = 320
+
+        int scrwidth = Gdx.graphics.getWidth();
+        int scrheight = Gdx.graphics.getHeight();
+        int cardwidth = scrwidth/6;
+        int cardheight = scrheight/5;
         if(handExpandedFlag) {
-            System.out.println("entrou");
-            batch.draw(str, 80, 80);
+            int x_expand = scrwidth/10;
+            int y_expand = scrheight/2;
+            int i;
+            for(i = 0; i<handCards.size() && i<4; i++) {
+                batch.draw(str, x_expand, y_expand, cardwidth, cardheight);  // Coordenadas do draw; [onde origem]
+                x_expand += cardwidth + 15;
+                //y_expand += scrheight/5 + 15
+            }
+            y_expand -= scrheight/5 + 15;
+            x_expand = scrwidth/10;
+            for(i = 4; i<handCards.size() && i<8;i++){
+                batch.draw(str, x_expand, y_expand, cardwidth, cardheight);
+                x_expand += cardwidth +15;
+            }
         }
 
         batch.end();
