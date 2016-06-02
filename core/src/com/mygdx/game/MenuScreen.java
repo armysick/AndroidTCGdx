@@ -107,7 +107,7 @@ public class MenuScreen implements Screen {
         textButtonStyle.font = skin.getFont("default");
         skin.add("default", textButtonStyle);
         textButton = new TextButton("PLAY",textButtonStyle);
-        textButton.setPosition(165, 0);
+        textButton.setPosition(Gdx.graphics.getWidth()/3, 0);
         stage.addActor(textButton);
         stage.addActor(textButton);
         stage.addActor(textButton);
@@ -132,7 +132,7 @@ public class MenuScreen implements Screen {
         normalGameStyle.font = skin.getFont("default");
         TextButton normalModeButton;
         normalModeButton = new TextButton("Normal Game", normalGameStyle);
-        normalModeButton.setPosition(165, 250);
+        normalModeButton.setPosition(Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight() - 80);
         stage.addActor(normalModeButton);
         stage.addActor(normalModeButton);
         stage.addActor(normalModeButton);
