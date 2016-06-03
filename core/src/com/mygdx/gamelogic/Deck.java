@@ -17,18 +17,19 @@ public class Deck {
 
     public void fill_deck_1(){
         cards.add(new Minion("demo minion1", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion2", new CardEffect(), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("demo minion2", new CardEffect(), new Texture("miniHand.jpg")));
         cards.add(new Minion("demo minion3", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion4", new CardEffect(), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("demo minion4", new CardEffect(), new Texture("miniHand.jpg")));
         cards.add(new Minion("demo minion5", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion6", new CardEffect(), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("demo minion6", new CardEffect(), new Texture("miniHand.jpg")));
         cards.add(new Minion("demo minion7", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion8", new CardEffect(), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("demo minion8", new CardEffect(), new Texture("miniHand.jpg")));
     }
 
     public ArrayList<Card> draw(int qty){
         ArrayList<Card> drawn = new ArrayList<Card>();
         int range = cards.size();
+
 
         for(int i = 0; i < qty ; i++) {
             if(cards.size() != 0) {

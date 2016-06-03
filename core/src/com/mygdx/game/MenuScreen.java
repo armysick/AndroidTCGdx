@@ -43,7 +43,7 @@ public class MenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
         skin = new Skin();
-        Pixmap pixmap = new Pixmap(150, 100, Pixmap.Format.RGBA8888);
+        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/3, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
@@ -108,6 +108,7 @@ public class MenuScreen implements Screen {
         skin.add("default", textButtonStyle);
         textButton = new TextButton("PLAY",textButtonStyle);
         textButton.setPosition(Gdx.graphics.getWidth()/3, 0);
+        textButton.getLabel().setFontScale(Gdx.graphics.getWidth()/480, Gdx.graphics.getWidth()/320);
         stage.addActor(textButton);
         stage.addActor(textButton);
         stage.addActor(textButton);
@@ -132,7 +133,8 @@ public class MenuScreen implements Screen {
         normalGameStyle.font = skin.getFont("default");
         TextButton normalModeButton;
         normalModeButton = new TextButton("Normal Game", normalGameStyle);
-        normalModeButton.setPosition(Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight() - 80);
+        normalModeButton.setPosition(Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight() - (Gdx.graphics.getHeight()/4));
+        normalModeButton.getLabel().setFontScale(Gdx.graphics.getWidth()/480, Gdx.graphics.getWidth()/320);
         stage.addActor(normalModeButton);
         stage.addActor(normalModeButton);
         stage.addActor(normalModeButton);
