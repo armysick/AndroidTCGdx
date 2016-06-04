@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.gamelogic.*;
@@ -50,15 +51,7 @@ public class GameScreen implements Screen {
         //
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
-        /*camera.viewportHeight = Gdx.graphics.getHeight();
-        camera.viewportWidth = Gdx.graphics.getWidth();
-
-        camera.position.set(camera.viewportWidth * .5f,
-                camera.viewportHeight * .5f, 0f);
-        camera.update();
-        viewport = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);*/
         stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
 
         loadTextures();
         stage.addActor(bgndImage);  // Add Background to stage
@@ -67,20 +60,11 @@ public class GameScreen implements Screen {
         stage.addActor(miniHand);
 
         handExpandedFlag = false;
-        /* Draw hand with cards
-        ArrayList<Card> handcards = hand.getCards();
-        int coord_x=Gdx.graphics.getWidth(), coord_y = 60;
-        Image temp;
-        for(int x = 0; x<handcards.size() ; x++){
-            temp = handcards.get(x).getImage();
-            temp.setSize(40, 40);
-            coord_x -= (temp.getWidth() + 10); // separate cards
-            temp.setPosition(coord_x, coord_y);
-            stage.addActor(temp);
-            //coord_x += 20;
-        }*/
 
 
+
+
+        Gdx.input.setInputProcessor(stage);
         System.out.println(stage.getActors());
 
     }
@@ -91,7 +75,34 @@ public class GameScreen implements Screen {
         bgndImage = new Image(bgndTex);
         bgndImage.setOrigin(0, 0);
         bgndImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        bgndImage.addListener(new ClickListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+                boolean col = false;
+                int scrwidth = Gdx.graphics.getWidth();
+                int scrheight = Gdx.graphics.getHeight();
+                int cardwidth = scrwidth/5;
+                int cardheight = scrheight/2 - 30;
+                int x_expand = scrwidth/9 - cardwidth/3;
+                int y_expand = scrheight - cardheight - 10;
+                for(int i=0; i<hand.getCards().size();i++) {
+                    if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight)
+                        col= true;
+                    x_expand += cardwidth + 15;
+                    if(i == 3) {
+                        y_expand -= scrheight/2 + 15;
+                        x_expand = scrwidth/9 - cardwidth/3;
+                    }
+                }
+                if(handExpandedFlag && !col)
+                    handExpandedFlag = false;
+                return true;
+            }
+        });
     }
+
+
 
 
     public void loadStartingDeck(){
@@ -119,7 +130,8 @@ public class GameScreen implements Screen {
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
-        drawn = MainDeck.draw(8);
+        drawn = MainDeck.draw(6);
+        System.out.println("drew: " + drawn.size());
         hand.addCardsToHand(drawn);
     }
 
@@ -128,6 +140,7 @@ public class GameScreen implements Screen {
     // EDITORS
 
     public void expandHand(){
+        expandSpriteList.clear();
         ArrayList<Card> handCards = hand.getCards();
         for(int i = 0; i < handCards.size() ; i++) {
             Texture mH = handCards.get(i).getImage();
@@ -139,8 +152,6 @@ public class GameScreen implements Screen {
         handExpandedFlag = true;
         System.out.println("Hand expand");
 
-        //bigHand
-        //TODO
     }
     public void addActorToStage(Actor act){
         stage.addActor(act);
