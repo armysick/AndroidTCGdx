@@ -44,8 +44,10 @@ public class GameScreen implements Screen {
     Hand hand;
     Boss bosserino;
     boolean handExpandedFlag;
+    boolean okay_to_select = false;
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
+    ArrayList<Card> boardCards = new ArrayList<Card>();
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -123,16 +125,21 @@ public class GameScreen implements Screen {
                 int x_expand = scrwidth/9 - cardwidth/3;
                 int y_expand = scrheight - cardheight - 10;
                 for(int i=0; i<hand.getCards().size();i++) {
-                    if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight)
-                        col= true;
+                    if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight) {
+                        System.out.println("encontrou x - y: " + x + " - " + y);
+
+                        col = true;
+                    }
                     x_expand += cardwidth + 15;
                     if(i == 3) {
                         y_expand -= scrheight/2 + 15;
                         x_expand = scrwidth/9 - cardwidth/3;
                     }
                 }
-                if(handExpandedFlag && !col)
+                if(handExpandedFlag && !col) {
                     handExpandedFlag = false;
+                    okay_to_select = false;
+                }
                 return true;
             }
         });
@@ -155,14 +162,15 @@ public class GameScreen implements Screen {
             }
             @Override
             public void touchUp(InputEvent event, float x, float y,int pointer, int button){
-
+                okay_to_select = true;
             }
         });
         hand = new Hand();
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
-        drawn = MainDeck.draw(bosserino.getStartHand());
+        //drawn = MainDeck.draw(bosserino.getStartHand());
+        drawn = MainDeck.draw(8);
         System.out.println("drew: " + drawn.size());
         hand.addCardsToHand(drawn);
     }
@@ -202,8 +210,17 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
-        //ArrayList<Card> handCards = hand.getCards();
-        //System.out.println("Hand cards size: " + handCards.size());
+        if(Gdx.input.isTouched()){
+            if(handExpandedFlag && okay_to_select){
+                int index = -1;
+                if((index = expandHandCollisionDetected(Gdx.input.getX(), Gdx.input.getY())) > -1){
+                    System.out.println("WAS IN!!!");
+                    System.out.println("x - y: " + Gdx.input.getX() + " - " + Gdx.input.getY());
+                    if(index < 4) hand.remove(4 - index);
+                    else if(index >=4) hand.remove(index);
+                }
+            }
+        }
 
         stage.draw();
 
@@ -237,6 +254,33 @@ public class GameScreen implements Screen {
         /*batch.begin();
             renderBackground();
         batch.end();*/
+    }
+
+
+    public int expandHandCollisionDetected(int x, int y){
+
+        int col = -1;
+        int scrwidth = Gdx.graphics.getWidth();
+        int scrheight = Gdx.graphics.getHeight();
+        int cardwidth = scrwidth/5;
+        int cardheight = scrheight/2 - 30;
+        int x_expand = scrwidth/9 - cardwidth/3;
+        int y_expand = scrheight - cardheight - 10;
+        for(int i=0; i<hand.getCards().size();i++) {
+            if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight) {
+                col = i;
+            }
+            x_expand += cardwidth + 15;
+            if(i == 3) {
+                y_expand -= scrheight/2 + 15;
+                x_expand = scrwidth/9 - cardwidth/3;
+            }
+        }
+        if(handExpandedFlag && col > -1) {
+            handExpandedFlag = false;
+            okay_to_select = false;
+        }
+        return col;
     }
 
     public void renderBackground(){

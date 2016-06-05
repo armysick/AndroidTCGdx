@@ -38,6 +38,10 @@ public class Hand implements Clickable {
         cards.addAll(toadd);
     }
 
+
+    public void remove(int index){
+        this.cards.remove(index);
+    }
     //GETTERS
 
     public ArrayList<Card> getCards(){
