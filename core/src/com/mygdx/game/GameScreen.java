@@ -125,11 +125,8 @@ public class GameScreen implements Screen {
                 int x_expand = scrwidth/9 - cardwidth/3;
                 int y_expand = scrheight - cardheight - 10;
                 for(int i=0; i<hand.getCards().size();i++) {
-                    if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight) {
-                        System.out.println("encontrou x - y: " + x + " - " + y);
-
+                    if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight)
                         col = true;
-                    }
                     x_expand += cardwidth + 15;
                     if(i == 3) {
                         y_expand -= scrheight/2 + 15;
@@ -213,11 +210,8 @@ public class GameScreen implements Screen {
         if(Gdx.input.isTouched()){
             if(handExpandedFlag && okay_to_select){
                 int index = -1;
-                if((index = expandHandCollisionDetected(Gdx.input.getX(), Gdx.input.getY())) > -1){
-                    System.out.println("WAS IN!!!");
-                    System.out.println("x - y: " + Gdx.input.getX() + " - " + Gdx.input.getY());
-                    if(index < 4) hand.remove(4 - index);
-                    else if(index >=4) hand.remove(index);
+                if((index = expandHandCollisionDetected(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY())) > -1){  // Gdx.input.getY() has zero on top
+                    hand.remove(index);
                 }
             }
         }
