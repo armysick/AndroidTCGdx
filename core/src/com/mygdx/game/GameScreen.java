@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.mygdx.Utils.Utilidades;
 import com.mygdx.gamelogic.*;
 
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ public class GameScreen implements Screen {
     Texture bgndTex;
     Image bgndImage;
     Image miniHand;
-    Container<Image> bigHand;
+    Image bosserinoImg;
+    Image expandBosserino;
     SpriteBatch batch = new SpriteBatch();
     Skin skin;
     Stage stage;
@@ -40,6 +42,7 @@ public class GameScreen implements Screen {
     ArrayList<Clickable> objects = new ArrayList<Clickable>();
     Deck MainDeck;
     Hand hand;
+    Boss bosserino;
     boolean handExpandedFlag;
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
@@ -55,8 +58,10 @@ public class GameScreen implements Screen {
 
         loadTextures();
         stage.addActor(bgndImage);  // Add Background to stage
+        loadStartingBoard();
         loadStartingDeck();
         loadStartingHand();
+        stage.addActor(bosserinoImg);
         stage.addActor(miniHand);
 
         handExpandedFlag = false;
@@ -70,6 +75,37 @@ public class GameScreen implements Screen {
     }
 
     // LOADING
+
+    public void loadStartingBoard(){
+        bosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
+        bosserinoImg = new Image(bosserino.getImage());
+        bosserinoImg.setSize(75, 75);
+        int wid = Gdx.graphics.getWidth()/2;
+        int hei = Gdx.graphics.getHeight()/2;
+        bosserinoImg.setPosition(wid - (bosserinoImg.getWidth()/2) , hei - (bosserinoImg.getHeight()/2) - hei/5);
+
+        //expanded version
+        expandBosserino = new Image(bosserino.getImage());
+        expandBosserino.setSize((int) (bosserinoImg.getWidth()*2.5), (int) (bosserinoImg.getHeight()*2.5));
+        expandBosserino.setPosition(wid - (bosserinoImg.getWidth()/2) , hei - (bosserinoImg.getHeight()/2) - hei/5);
+        //
+
+        bosserinoImg.addListener(new InputListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+
+                stage.addActor(expandBosserino);
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y,int pointer, int button){
+                expandBosserino.remove();
+            }
+
+        });
+
+    }
     public void loadTextures(){
         bgndTex = new Texture("boardbackground.jpg");
         bgndImage = new Image(bgndTex);
@@ -101,10 +137,6 @@ public class GameScreen implements Screen {
             }
         });
     }
-
-
-
-
     public void loadStartingDeck(){
         MainDeck = new Deck();
         MainDeck.fill_deck_1();
@@ -130,7 +162,7 @@ public class GameScreen implements Screen {
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
-        drawn = MainDeck.draw(6);
+        drawn = MainDeck.draw(bosserino.getStartHand());
         System.out.println("drew: " + drawn.size());
         hand.addCardsToHand(drawn);
     }
