@@ -1,4 +1,11 @@
 package com.mygdx.game;
+//String path = ((FileTextureData)texture.getTextureData()).getFileHandle().path();
+//Texture texture = ...;
+//Image image = new Image(texture);
+
+//// switch to a new texture
+//        Texture newTexture = ...;
+//        image.setDrawable(new SpriteDrawable(new Sprite(newTexture)));
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -8,6 +15,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FileTextureData;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -48,6 +56,8 @@ public class GameScreen implements Screen {
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
     ArrayList<Card> boardCards = new ArrayList<Card>();
+    ArrayList<Image> minionvehiczone = new ArrayList<Image>();
+    ArrayList<Image> expandedZones = new ArrayList<Image>();
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -60,6 +70,9 @@ public class GameScreen implements Screen {
 
         loadTextures();
         stage.addActor(bgndImage);  // Add Background to stage
+        for(int h = 0 ; h < minionvehiczone.size() ; h++){
+            stage.addActor(minionvehiczone.get(h));
+        }
         loadStartingBoard();
         loadStartingDeck();
         loadStartingHand();
@@ -81,7 +94,7 @@ public class GameScreen implements Screen {
     public void loadStartingBoard(){
         bosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
         bosserinoImg = new Image(bosserino.getImage());
-        bosserinoImg.setSize(75, 75);
+        bosserinoImg.setSize((int) (Gdx.graphics.getWidth() / 6.4),(int) (Gdx.graphics.getHeight()/4.3));
         int wid = Gdx.graphics.getWidth()/2;
         int hei = Gdx.graphics.getHeight()/2;
         bosserinoImg.setPosition(wid - (bosserinoImg.getWidth()/2) , hei - (bosserinoImg.getHeight()/2) - hei/5);
@@ -137,9 +150,40 @@ public class GameScreen implements Screen {
                     handExpandedFlag = false;
                     okay_to_select = false;
                 }
+                for(int u = 0 ; u < expandedZones.size();u++){
+                    expandedZones.get(u).remove();
+                }
                 return true;
             }
         });
+
+        int hei = Gdx.graphics.getHeight()/2;
+
+        int x_coord = Gdx.graphics.getWidth()/10;
+        int exp_x_coord = x_coord;
+        for(int mvz = 0 ; mvz < 4 ; mvz++){
+            Image new_img = new Image(new Texture("cardzone.jpg"));
+            new_img.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));
+            if(mvz == 3)
+                x_coord = (int) (Gdx.graphics.getWidth()/10 + 3*(new_img.getWidth() + Gdx.graphics.getWidth()/11));
+            else if(mvz == 2)
+                x_coord += (int) (Gdx.graphics.getWidth() / 6.4) ;  //first part = boss card width
+            new_img.setPosition(x_coord, hei - (new_img.getHeight()/2) - hei/5);
+
+
+            //expanded version
+            Image new_img_expand = new Image(new Texture("cardzone.jpg"));
+            new_img_expand.setSize((int) (new_img.getWidth()*2.5), (int) (new_img.getHeight()*2.5));
+            new_img_expand.setPosition(exp_x_coord , hei - (new_img.getHeight()/2) - hei/5);
+            expandedZones.add(new_img_expand);
+            //
+
+            x_coord += new_img.getWidth() + (int) (Gdx.graphics.getWidth()/22);
+            minionvehiczone.add(new_img);
+
+        }
+
+
     }
     public void loadStartingDeck(){
         MainDeck = new Deck();
@@ -214,6 +258,14 @@ public class GameScreen implements Screen {
                     hand.remove(index);
                 }
             }
+            else if (!handExpandedFlag){
+                int index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()));
+
+                if(index > -1) {
+                    System.out.println("GOT EM");
+                    stage.addActor(expandedZones.get(index));
+                }
+            }
         }
 
         stage.draw();
@@ -277,6 +329,31 @@ public class GameScreen implements Screen {
         return col;
     }
 
+    public int getZoneClickedFromCoords(int x, int y){
+        int answer = -1;
+        int hei = Gdx.graphics.getHeight()/2;
+
+        int zonewid = Gdx.graphics.getWidth() / 8;
+        int zonehei = (int) (Gdx.graphics.getHeight() / 5.3);
+        int x_coord = Gdx.graphics.getWidth()/10;
+        int y_coord = hei - (zonehei / 2) - hei / 5;
+        for(int mvz = 0 ; mvz < 4 ; mvz++) {
+
+
+            if(mvz == 3)
+                x_coord = (int) (Gdx.graphics.getWidth()/10 + 3*(zonewid + Gdx.graphics.getWidth()/11));
+            else if(mvz == 2)
+                x_coord += (int) (Gdx.graphics.getWidth() / 6.4) ;  //first part = boss card width
+
+            if(x >= x_coord && x <= (x_coord + zonewid) && y >= y_coord && y <= y_coord + zonehei) {
+                System.out.println(" x +- y " + x + " -- "  + y);
+                answer = mvz;
+            }
+            x_coord += zonewid + (int) (Gdx.graphics.getWidth()/22);
+        }
+        return answer;
+
+    }
     public void renderBackground(){
         //bgndSprite.draw(batch);
     }
