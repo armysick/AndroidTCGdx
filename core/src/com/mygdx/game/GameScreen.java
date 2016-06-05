@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.Utils.Utilidades;
@@ -255,6 +257,22 @@ public class GameScreen implements Screen {
             if(handExpandedFlag && okay_to_select){
                 int index = -1;
                 if((index = expandHandCollisionDetected(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY())) > -1){  // Gdx.input.getY() has zero on top
+                    //boolean fullboard = true;
+                    for(int i = 0; i < minionvehiczone.size(); i++) {
+                        TextureRegionDrawable texdraw = (TextureRegionDrawable) minionvehiczone.get(i).getDrawable();
+                        TextureRegion texreg = texdraw.getRegion();
+                        Texture texture = texreg.getTexture();
+                        String path = ((FileTextureData) texture.getTextureData()).getFileHandle().path();
+                        if(path.equals("cardzone.jpg")){
+                            // Set zone texture to played card texture
+                            minionvehiczone.get(i).remove();
+                            expandedZones.get(i).remove();
+                            minionvehiczone.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(hand.getCards().get(index).getImage())));
+                            expandedZones.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(hand.getCards().get(index).getImage())));
+                            stage.addActor(minionvehiczone.get(i));
+                            break;
+                        }
+                    }
                     hand.remove(index);
                 }
             }
