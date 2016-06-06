@@ -273,6 +273,7 @@ public class GameScreen implements Screen {
                             break;
                         }
                     }
+                    boardCards.add(hand.getCards().get(index));
                     hand.remove(index);
                 }
             }
