@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.Utils.Utilidades;
 import com.mygdx.gamelogic.*;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 
 /**
@@ -288,6 +289,18 @@ public class GameScreen implements Screen {
 
     // EDITORS
 
+
+    // PROCESSING
+    public void handleMill(int mc, int wc, int gc, int rc){
+        // @ GUI  Update label counters
+        numberslbls.get(0).setText(Integer.toString(Integer.parseInt(numberslbls.get(0).getText().toString()) + mc));
+        numberslbls.get(1).setText(Integer.toString(Integer.parseInt(numberslbls.get(1).getText().toString()) + wc));
+        numberslbls.get(2).setText(Integer.toString(Integer.parseInt(numberslbls.get(2).getText().toString()) + gc));
+        numberslbls.get(3).setText(Integer.toString(Integer.parseInt(numberslbls.get(3).getText().toString()) + rc));
+
+         // TODO Logic part
+    }
+    //
     public void expandHand(){
         expandSpriteList.clear();
         ArrayList<Card> handCards = hand.getCards();
@@ -300,6 +313,11 @@ public class GameScreen implements Screen {
         }
         handExpandedFlag = true;
         System.out.println("Hand expand");
+
+        //Temp
+        ArrayList<Integer> milled = MatDeck.mill(15);
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
+
 
     }
     public void addActorToStage(Actor act){

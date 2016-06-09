@@ -44,9 +44,9 @@ public class MaterialDeck {
     }
 
 
-    public ArrayList<AbstractMap.SimpleEntry<String, Integer>> mill(int qty){
+    public ArrayList<Integer> mill(int qty){
         ArrayList<Mats> milled = new ArrayList<Mats>();
-        ArrayList<AbstractMap.SimpleEntry<String, Integer>> finalmilled = new ArrayList<AbstractMap.SimpleEntry<String, Integer>>();
+        ArrayList<Integer> finalmilled = new ArrayList<Integer>();
         int range = this.mats.size();
         for(int i = 0 ; i < qty ; i ++){
             if(mats.size() > 0) {
@@ -73,10 +73,10 @@ public class MaterialDeck {
 
         }
 
-        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("metal", mc));
-        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("wood", wc));
-        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("glass", gc));
-        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("rubber", rc));
+        finalmilled.add(mc);
+        finalmilled.add(wc);
+        finalmilled.add(gc);
+        finalmilled.add(rc);
 
         return finalmilled;
 
