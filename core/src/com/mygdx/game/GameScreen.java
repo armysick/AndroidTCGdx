@@ -51,6 +51,7 @@ public class GameScreen implements Screen {
     FillViewport viewport;
     ArrayList<Clickable> objects = new ArrayList<Clickable>();
     Deck MainDeck;
+    MaterialDeck MatDeck;
     Hand hand;
     Boss bosserino;
     boolean handExpandedFlag;
@@ -60,6 +61,7 @@ public class GameScreen implements Screen {
     ArrayList<Card> boardCards = new ArrayList<Card>();
     ArrayList<Image> minionvehiczone = new ArrayList<Image>();
     ArrayList<Image> expandedZones = new ArrayList<Image>();
+    ArrayList<Image> materialzone = new ArrayList<Image>();
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -72,11 +74,9 @@ public class GameScreen implements Screen {
 
         loadTextures();
         stage.addActor(bgndImage);  // Add Background to stage
-        for(int h = 0 ; h < minionvehiczone.size() ; h++){
-            stage.addActor(minionvehiczone.get(h));
-        }
+        addZones();
         loadStartingBoard();
-        loadStartingDeck();
+        loadStartingDecks();
         loadStartingHand();
         stage.addActor(bosserinoImg);
         stage.addActor(miniHand);
@@ -93,6 +93,15 @@ public class GameScreen implements Screen {
 
     // LOADING
 
+    public void addZones(){
+        for(int h = 0 ; h < minionvehiczone.size() ; h++)
+            stage.addActor(minionvehiczone.get(h));
+
+
+        for(int m = 0 ; m < materialzone.size(); m++)
+            stage.addActor(materialzone.get(m));
+
+    }
     public void loadStartingBoard(){
         bosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
         bosserinoImg = new Image(bosserino.getImage());
@@ -159,6 +168,8 @@ public class GameScreen implements Screen {
             }
         });
 
+
+        // Monster ZONES
         int hei = Gdx.graphics.getHeight()/2;
 
         int x_coord = Gdx.graphics.getWidth()/10;
@@ -185,11 +196,37 @@ public class GameScreen implements Screen {
 
         }
 
+        // Material Zones
+
+        x_coord = Gdx.graphics.getWidth()/6;
+        exp_x_coord = x_coord;
+        for(int mvz = 0 ; mvz < 4 ; mvz++){
+            Image new_img = null;
+            if(mvz == 0)
+                new_img = new Image(new Texture("metal.jpg"));
+            else if(mvz == 1)
+                new_img = new Image(new Texture("wood.jpg"));
+            else if(mvz == 2)
+                new_img = new Image(new Texture("glass.jpg"));
+            else if(mvz == 3)
+                new_img = new Image(new Texture("rubber.jpg"));
+            new_img.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));
+            new_img.setPosition(x_coord, hei / 12);
+
+
+            x_coord += new_img.getWidth() + (int) (Gdx.graphics.getWidth()/22);
+            materialzone.add(new_img);
+
+        }
+
 
     }
-    public void loadStartingDeck(){
+    public void loadStartingDecks(){
         MainDeck = new Deck();
         MainDeck.fill_deck_1();
+
+        MatDeck = new MaterialDeck();
+        MatDeck.fill_deck_1();
     }
     public void loadStartingHand(){
         //graphical

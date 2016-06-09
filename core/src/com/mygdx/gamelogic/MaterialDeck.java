@@ -16,10 +16,10 @@ public class MaterialDeck {
 
     public void fill_deck_1(){
         for(int i = 0 ; i<5 ;i++) {
-            mats.add(new Mats("metal", new CardEffect(), new Texture("metal.jpg")));
-            mats.add(new Mats("wood", new CardEffect(), new Texture("wood.jpg")));
-            mats.add(new Mats("glass", new CardEffect(), new Texture("glass.jpg")));
-            mats.add(new Mats("rubber", new CardEffect(), new Texture("rubber.jpg")));
+            mats.add(new Mats("metal", new CardEffect(), new Texture("metal.jpg")));  // dá 100
+            mats.add(new Mats("wood", new CardEffect(), new Texture("wood.jpg")));  // retira 100
+            mats.add(new Mats("glass", new CardEffect(), new Texture("glass.jpg")));  // Draw
+            mats.add(new Mats("rubber", new CardEffect(), new Texture("rubber.jpg"))); // mill
         }
     }
 
