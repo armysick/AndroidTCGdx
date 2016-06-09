@@ -314,7 +314,7 @@ public class GameScreen implements Screen {
         handExpandedFlag = true;
         System.out.println("Hand expand");
 
-        //Temp
+        //TODO REMOVE Temp
         ArrayList<Integer> milled = MatDeck.mill(15);
         handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
 
