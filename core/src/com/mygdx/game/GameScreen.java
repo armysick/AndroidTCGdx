@@ -9,9 +9,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -62,6 +66,7 @@ public class GameScreen implements Screen {
     ArrayList<Image> minionvehiczone = new ArrayList<Image>();
     ArrayList<Image> expandedZones = new ArrayList<Image>();
     ArrayList<Image> materialzone = new ArrayList<Image>();
+    ArrayList<Label> numberslbls = new ArrayList<Label>();  // Order: Metal // Wood // Glass // Rubber
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -101,6 +106,8 @@ public class GameScreen implements Screen {
         for(int m = 0 ; m < materialzone.size(); m++)
             stage.addActor(materialzone.get(m));
 
+        for(int l = 0 ; l < numberslbls.size(); l++)
+            stage.addActor(numberslbls.get(l));
     }
     public void loadStartingBoard(){
         bosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
@@ -217,6 +224,28 @@ public class GameScreen implements Screen {
             x_coord += new_img.getWidth() + (int) (Gdx.graphics.getWidth()/22);
             materialzone.add(new_img);
 
+        }
+
+        //MATERIAL LABELS
+        skin = new Skin();
+        Pixmap pixmap = new Pixmap(Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/3, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        skin.add("white", new Texture(pixmap));
+        BitmapFont bfont = new BitmapFont();
+        skin.add("default", bfont);
+        Label.LabelStyle lblst = new Label.LabelStyle();
+        lblst.font = skin.getFont("default");
+        skin.add("default", lblst);
+
+        x_coord = (Gdx.graphics.getWidth()/6) + Gdx.graphics.getWidth()/16;  // add half of material card size
+        exp_x_coord = x_coord;
+        for(int l = 0; l < 4 ; l++) {
+
+            Label numberslbl = new Label("0", skin);
+            numberslbl.setPosition(x_coord, (hei / 12) + (int) (Gdx.graphics.getHeight()/5.5)); // Mat position + Mat height + a bit
+            numberslbls.add(numberslbl);
+            x_coord += (Gdx.graphics.getWidth()/8) + (int) (Gdx.graphics.getWidth()/22);
         }
 
 
