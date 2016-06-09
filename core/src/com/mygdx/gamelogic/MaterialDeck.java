@@ -2,6 +2,7 @@ package com.mygdx.gamelogic;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 
 /**
@@ -42,4 +43,42 @@ public class MaterialDeck {
         return drawn;
     }
 
+
+    public ArrayList<AbstractMap.SimpleEntry<String, Integer>> mill(int qty){
+        ArrayList<Mats> milled = new ArrayList<Mats>();
+        ArrayList<AbstractMap.SimpleEntry<String, Integer>> finalmilled = new ArrayList<AbstractMap.SimpleEntry<String, Integer>>();
+        int range = this.mats.size();
+        for(int i = 0 ; i < qty ; i ++){
+            if(mats.size() > 0) {
+                int random = (int) (Math.random() * range);
+                milled.add(mats.get(random));
+                mats.remove(random);
+                range -= 1;
+            }
+            else
+                break;
+        }
+
+        int mc = 0, wc = 0, gc = 0 , rc = 0;  // Each material counter
+
+        for(int x = 0; x < milled.size(); x++){
+            if(milled.get(x).getName().equals("metal"))
+                mc++;
+            else if(milled.get(x).getName().equals("wood"))
+                wc++;
+            else if(milled.get(x).getName().equals("glass"))
+                gc++;
+            else if(milled.get(x).getName().equals("rubber"))
+                rc++;
+
+        }
+
+        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("metal", mc));
+        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("wood", wc));
+        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("glass", gc));
+        finalmilled.add(new AbstractMap.SimpleEntry<String, Integer>("rubber", rc));
+
+        return finalmilled;
+
+    }
 }
