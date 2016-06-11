@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class MaterialDeck {
 
-    ArrayList<Mats> mats = new ArrayList<Mats>();
+    private ArrayList<Mats> mats = new ArrayList<Mats>();
     public MaterialDeck(){
 
     }

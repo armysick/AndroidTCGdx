@@ -57,9 +57,11 @@ public class GameScreen implements Screen {
     ArrayList<Clickable> objects = new ArrayList<Clickable>();
     Deck MainDeck;
     MaterialDeck MatDeck;
+    ExtraDeck extraDeck;
     Hand hand;
     Boss bosserino;
     boolean handExpandedFlag;
+    boolean extraExpandedFlag;
     boolean okay_to_select = false;
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
@@ -68,6 +70,7 @@ public class GameScreen implements Screen {
     ArrayList<Image> expandedZones = new ArrayList<Image>();
     ArrayList<Image> materialzone = new ArrayList<Image>();
     ArrayList<Label> numberslbls = new ArrayList<Label>();  // Order: Metal // Wood // Glass // Rubber
+    int[] matcounters = {0,0,0,0};
 
     public GameScreen(TCG game, Screen parent){
         this.game=game;
@@ -79,6 +82,7 @@ public class GameScreen implements Screen {
         stage = new Stage();
 
         loadTextures();
+        bgndImage.toBack();
         stage.addActor(bgndImage);  // Add Background to stage
         addZones();
         loadStartingBoard();
@@ -254,9 +258,29 @@ public class GameScreen implements Screen {
     public void loadStartingDecks(){
         MainDeck = new Deck();
         MainDeck.fill_deck_1();
+        MainDeck.startgui(this);
 
         MatDeck = new MaterialDeck();
         MatDeck.fill_deck_1();
+
+        extraDeck = new ExtraDeck();
+        extraDeck.fill_extra_deck_1();
+        Image deckimg = new Image(new Texture("extradeck.jpg"));
+        deckimg.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));
+        deckimg.setPosition(0, Gdx.graphics.getHeight()/15);
+
+        deckimg.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+                expand(1);  // ExtraDeckExpand = 1 || HandExpand = 0
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y,int pointer, int button){
+                okay_to_select = true;
+            }
+        });
+        stage.addActor(deckimg);
     }
     public void loadStartingHand(){
         //graphical
@@ -267,7 +291,7 @@ public class GameScreen implements Screen {
         miniHand.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
-                expandHand();
+                expand(0); // ExtraDeckExpand = 1 || HandExpand = 0
                 return true;
             }
             @Override
@@ -292,31 +316,51 @@ public class GameScreen implements Screen {
 
     // PROCESSING
     public void handleMill(int mc, int wc, int gc, int rc){
-        // @ GUI  Update label counters
-        numberslbls.get(0).setText(Integer.toString(Integer.parseInt(numberslbls.get(0).getText().toString()) + mc));
-        numberslbls.get(1).setText(Integer.toString(Integer.parseInt(numberslbls.get(1).getText().toString()) + wc));
-        numberslbls.get(2).setText(Integer.toString(Integer.parseInt(numberslbls.get(2).getText().toString()) + gc));
-        numberslbls.get(3).setText(Integer.toString(Integer.parseInt(numberslbls.get(3).getText().toString()) + rc));
 
-         // TODO Logic part
+        matcounters[0] += mc;
+        matcounters[1] += wc;
+        matcounters[2] += gc;
+        matcounters[3] += rc;
+        // @ GUI  Update label counters
+        numberslbls.get(0).setText(Integer.toString(matcounters[0]));
+        numberslbls.get(1).setText(Integer.toString(matcounters[1]));
+        numberslbls.get(2).setText(Integer.toString(matcounters[2]));
+        numberslbls.get(3).setText(Integer.toString(matcounters[3]));
+
+
     }
     //
-    public void expandHand(){
+    public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
         expandSpriteList.clear();
-        ArrayList<Card> handCards = hand.getCards();
-        for(int i = 0; i < handCards.size() ; i++) {
-            Texture mH = handCards.get(i).getImage();
-            TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
-            str = new Sprite(tr);
-            str.setSize(20, 20);
-            expandSpriteList.add(str);
+        if(hore == 0) {
+            ArrayList<Card> handCards = hand.getCards();
+            for (int i = 0; i < handCards.size(); i++) {
+                Texture mH = handCards.get(i).getImage();
+                TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
+                str = new Sprite(tr);
+                str.setSize(20, 20);
+                expandSpriteList.add(str);
+            }
+            handExpandedFlag = true;
+            System.out.println("Hand expand");
         }
-        handExpandedFlag = true;
-        System.out.println("Hand expand");
+        else if(hore == 1){
+            ArrayList<Vehicle> vehiclist = extraDeck.getVehics();
+            for(int i = 0; i < vehiclist.size(); i++){
+                Texture mH = vehiclist.get(i).getImage();
+                TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
+                str = new Sprite(tr);
+                str.setSize(20, 20);
+                expandSpriteList.add(str);
+            }
+            handExpandedFlag = false;
+            extraExpandedFlag = true;
+            System.out.println("Extra expand");
+        }
 
-        //TODO REMOVE Temp
-        ArrayList<Integer> milled = MatDeck.mill(15);
-        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
+        //TODO Check here for mill
+        /*ArrayList<Integer> milled = MatDeck.mill(15);
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));*/
 
 
     }
@@ -338,7 +382,7 @@ public class GameScreen implements Screen {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
         if(Gdx.input.isTouched()){
-            if(handExpandedFlag && okay_to_select){
+            if((handExpandedFlag || extraExpandedFlag) && okay_to_select){
                 int index = -1;
                 if((index = expandHandCollisionDetected(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY())) > -1){  // Gdx.input.getY() has zero on top
                     //boolean fullboard = true;
@@ -351,17 +395,41 @@ public class GameScreen implements Screen {
                             // Set zone texture to played card texture
                             minionvehiczone.get(i).remove();
                             expandedZones.get(i).remove();
-                            minionvehiczone.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(hand.getCards().get(index).getImage())));
-                            expandedZones.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(hand.getCards().get(index).getImage())));
+                            Texture texturino;
+
+                            if(handExpandedFlag) {
+                                System.out.println("ao menos passou 1");
+                                texturino = hand.getCards().get(index).getImage();
+                            }
+                            else if(extraExpandedFlag) {
+                                System.out.println("ao menos passou 2");
+                                texturino = extraDeck.getVehics().get(index).getImage();
+                            }
+                            else {
+                                System.out.println("ao menos passou 3");
+                                texturino = new Texture("cardzone.jpg");
+                            }
+                            minionvehiczone.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(texturino)));
+                            expandedZones.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(texturino)));
                             stage.addActor(minionvehiczone.get(i));
                             break;
                         }
                     }
-                    boardCards.add(hand.getCards().get(index));
-                    hand.remove(index);
+
+                    if(handExpandedFlag) {
+                        boardCards.add(hand.getCards().get(index));
+                        hand.remove(index);
+                    }
+                    else if(extraExpandedFlag) {
+                        boardCards.add(extraDeck.getVehics().get(index));
+                        extraDeck.remove(index);
+                    }
+                    handExpandedFlag = false;
+                    extraExpandedFlag = false;
                 }
+
             }
-            else if (!handExpandedFlag){
+            else if (!handExpandedFlag && !extraExpandedFlag){
                 int index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()));
 
                 if(index > -1) {
@@ -381,7 +449,7 @@ public class GameScreen implements Screen {
         int scrheight = Gdx.graphics.getHeight();
         int cardwidth = scrwidth/5;
         int cardheight = scrheight/2 - 30;
-        if(handExpandedFlag) {
+        if(handExpandedFlag || extraExpandedFlag) {
             int x_expand = scrwidth/9 - cardwidth/3;
             int y_expand = scrheight - cardheight - 10;
             int i;
@@ -415,18 +483,28 @@ public class GameScreen implements Screen {
         int cardheight = scrheight/2 - 30;
         int x_expand = scrwidth/9 - cardwidth/3;
         int y_expand = scrheight - cardheight - 10;
-        for(int i=0; i<hand.getCards().size();i++) {
-            if(x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <=y_expand + cardheight) {
+        int size = 0;
+        if(handExpandedFlag)
+            size = hand.getCards().size();
+        else if(extraExpandedFlag)
+            size = extraDeck.getVehics().size();
+        for (int i = 0; i < size; i++) {
+            if (x >= x_expand && x <= x_expand + cardwidth && y >= y_expand && y <= y_expand + cardheight) {
                 col = i;
             }
             x_expand += cardwidth + 15;
-            if(i == 3) {
-                y_expand -= scrheight/2 + 15;
-                x_expand = scrwidth/9 - cardwidth/3;
+            if (i == 3) {
+                y_expand -= scrheight / 2 + 15;
+                x_expand = scrwidth / 9 - cardwidth / 3;
             }
         }
+
         if(handExpandedFlag && col > -1) {
-            handExpandedFlag = false;
+            //handExpandedFlag = false;
+            okay_to_select = false;
+        }
+        else if(extraExpandedFlag && col > -1) {
+            //extraExpandedFlag = false;
             okay_to_select = false;
         }
         return col;
