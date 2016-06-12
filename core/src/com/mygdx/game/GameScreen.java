@@ -65,7 +65,7 @@ public class GameScreen implements Screen {
     boolean okay_to_select = false;
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
-    ArrayList<Card> boardCards = new ArrayList<Card>();
+    Card[] boardCards = new Card[4];
     ArrayList<Image> minionvehiczone = new ArrayList<Image>();
     ArrayList<Image> expandedZones = new ArrayList<Image>();
     ArrayList<Image> materialzone = new ArrayList<Image>();
@@ -92,6 +92,7 @@ public class GameScreen implements Screen {
         stage.addActor(miniHand);
 
         handExpandedFlag = false;
+        extraExpandedFlag = false;
 
 
 
@@ -169,8 +170,9 @@ public class GameScreen implements Screen {
                         x_expand = scrwidth/9 - cardwidth/3;
                     }
                 }
-                if(handExpandedFlag && !col) {
+                if((handExpandedFlag || extraExpandedFlag) && !col) {
                     handExpandedFlag = false;
+                    extraExpandedFlag = false;
                     okay_to_select = false;
                 }
                 for(int u = 0 ; u < expandedZones.size();u++){
@@ -341,6 +343,8 @@ public class GameScreen implements Screen {
                 str.setSize(20, 20);
                 expandSpriteList.add(str);
             }
+            okay_to_select = false;
+            extraExpandedFlag = false;
             handExpandedFlag = true;
             System.out.println("Hand expand");
         }
@@ -353,14 +357,15 @@ public class GameScreen implements Screen {
                 str.setSize(20, 20);
                 expandSpriteList.add(str);
             }
+            okay_to_select = false;
             handExpandedFlag = false;
             extraExpandedFlag = true;
             System.out.println("Extra expand");
         }
 
         //TODO Check here for mill
-        /*ArrayList<Integer> milled = MatDeck.mill(15);
-        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));*/
+        ArrayList<Integer> milled = MatDeck.mill(15);
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
 
 
     }
@@ -386,7 +391,27 @@ public class GameScreen implements Screen {
                 int index = -1;
                 if((index = expandHandCollisionDetected(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY())) > -1){  // Gdx.input.getY() has zero on top
                     //boolean fullboard = true;
+                    AbstractMap.SimpleEntry<ArrayList<Integer>, int[]> state_after_play = null;
+                    ArrayList<Integer> indexes_to_remove = new ArrayList<Integer>();
+                    if(extraExpandedFlag) {
+                        state_after_play = extraDeck.getVehics().get(index).playvehicle(boardCards, matcounters);
+                        if(state_after_play != null) {
+                            indexes_to_remove.clear();
+                            indexes_to_remove = state_after_play.getKey();
+                            for(int r = 0; r < indexes_to_remove.size(); r++) {
+                                boardCards[r] = null;
+                                System.out.println("index to remove " + r + ": " + indexes_to_remove.get(r));
+                                minionvehiczone.get(indexes_to_remove.get(r)).remove();
+                                minionvehiczone.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
+                                stage.addActor(minionvehiczone.get(indexes_to_remove.get(r)));
+                            }
+                            matcounters = state_after_play.getValue();
+                            handleMill(0,0,0,0); // update label values
+                        }
+                    }
                     for(int i = 0; i < minionvehiczone.size(); i++) {
+                        if(extraExpandedFlag && state_after_play == null)
+                            break;
                         TextureRegionDrawable texdraw = (TextureRegionDrawable) minionvehiczone.get(i).getDrawable();
                         TextureRegion texreg = texdraw.getRegion();
                         Texture texture = texreg.getTexture();
@@ -404,6 +429,7 @@ public class GameScreen implements Screen {
                             else if(extraExpandedFlag) {
                                 System.out.println("ao menos passou 2");
                                 texturino = extraDeck.getVehics().get(index).getImage();
+                                System.out.println("index: " + index);
                             }
                             else {
                                 System.out.println("ao menos passou 3");
@@ -412,18 +438,19 @@ public class GameScreen implements Screen {
                             minionvehiczone.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(texturino)));
                             expandedZones.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(texturino)));
                             stage.addActor(minionvehiczone.get(i));
+                            if(handExpandedFlag) {
+                                boardCards[i] = hand.getCards().get(index);
+                                hand.remove(index);
+                            }
+                            if(extraExpandedFlag){
+                                boardCards[i] = extraDeck.getVehics().get(index);
+                                extraDeck.remove(index);
+                            }
                             break;
                         }
                     }
 
-                    if(handExpandedFlag) {
-                        boardCards.add(hand.getCards().get(index));
-                        hand.remove(index);
-                    }
-                    else if(extraExpandedFlag) {
-                        boardCards.add(extraDeck.getVehics().get(index));
-                        extraDeck.remove(index);
-                    }
+
                     handExpandedFlag = false;
                     extraExpandedFlag = false;
                 }
@@ -433,7 +460,7 @@ public class GameScreen implements Screen {
                 int index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()));
 
                 if(index > -1) {
-                    System.out.println("GOT EM");
+                    //System.out.println("GOT EM");
                     stage.addActor(expandedZones.get(index));
                 }
             }

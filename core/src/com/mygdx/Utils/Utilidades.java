@@ -22,4 +22,11 @@ public class Utilidades {
             return null;
         }
     }
+
+    // http://stackoverflow.com/questions/7961788/math-random-explained
+    public static int randomWithRange(int min, int max)
+    {
+        int range = (max - min) + 1;
+        return (int)(Math.random() * range) + min;
+    }
 }

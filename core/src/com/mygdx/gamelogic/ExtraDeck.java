@@ -20,10 +20,10 @@ public class ExtraDeck{
     }
 
     public void fill_extra_deck_1(){
-        vehics.add(new Vehicle("vehic1", new CardEffect(), new Texture("badlogic.jpg")));
-        vehics.add(new Vehicle("vehic2", new CardEffect(), new Texture("twinsoldier.jpg")));
-        vehics.add(new Vehicle("vehic3", new CardEffect(), new Texture("demominion.jpg")));
-        vehics.add(new Vehicle("vehic4", new CardEffect(), new Texture("demominion2.jpg")));
+        vehics.add(new Vehicle("vehic1", new CardEffect(), new Texture("boardbackground.jpg"), 1, 1));
+        vehics.add(new Vehicle("vehic2", new CardEffect(), new Texture("twinsoldier.jpg"), 2, 2));
+        vehics.add(new Vehicle("vehic3", new CardEffect(), new Texture("demominion.jpg"), 3, 3));
+        vehics.add(new Vehicle("vehic4", new CardEffect(), new Texture("demominion2.jpg"), 4, 4));
     }
 
 
