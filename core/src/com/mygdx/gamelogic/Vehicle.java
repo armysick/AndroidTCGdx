@@ -23,17 +23,20 @@ public class Vehicle extends Card {
 
     public AbstractMap.SimpleEntry<ArrayList<Integer>, int[]> playvehicle(Card[] board, int[] mats){
         int minion_counter = 0;
+        int cost_left_to_pay = trip_cost;
         for(int i = 0 ; i < 4 ; i++)
-            if(board[i] instanceof Minion)
+            if(board[i] instanceof Minion) {
                 minion_counter++;
-        System.out.println("MINION COUNTER: " + minion_counter);
+                if(board[i].getName().equals("twinsoldier") && (this.trip_cost > 1))
+                    cost_left_to_pay--;
+            }
         int sum = 0;
         for(int m : mats)
             sum+=m;
 
         ArrayList<Integer> indexes_to_remove = new ArrayList<Integer>();
         if(minion_counter >=trip_cost && sum >= mat_cost){  // if board can pay summon cost
-            int cost_left_to_pay = trip_cost;
+
             for(int t = 0; t < cost_left_to_pay ; t++){
                 if(board[t] instanceof Minion) {
                     indexes_to_remove.add(t);

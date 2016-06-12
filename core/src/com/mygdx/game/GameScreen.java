@@ -338,63 +338,8 @@ public class GameScreen implements Screen {
                 return false;
         return true;
     }
-    //
-    public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
-        expandSpriteList.clear();
-        if(hore == 0) {
-            ArrayList<Card> handCards = hand.getCards();
-            for (int i = 0; i < handCards.size(); i++) {
-                Texture mH = handCards.get(i).getImage();
-                TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
-                str = new Sprite(tr);
-                str.setSize(20, 20);
-                expandSpriteList.add(str);
-            }
-            okay_to_select = false;
-            extraExpandedFlag = false;
-            handExpandedFlag = true;
-            System.out.println("Hand expand");
-        }
-        else if(hore == 1){
-            ArrayList<Vehicle> vehiclist = extraDeck.getVehics();
-            for(int i = 0; i < vehiclist.size(); i++){
-                Texture mH = vehiclist.get(i).getImage();
-                TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
-                str = new Sprite(tr);
-                str.setSize(20, 20);
-                expandSpriteList.add(str);
-            }
-            okay_to_select = false;
-            handExpandedFlag = false;
-            extraExpandedFlag = true;
-            System.out.println("Extra expand");
-        }
 
-        //TODO Check here for mill
-        ArrayList<Integer> milled = MatDeck.mill(4);
-        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
-
-
-    }
-    public void addActorToStage(Actor act){
-        stage.addActor(act);
-    }
-    @Override
-    public void show() {
-
-    }
-
-    public void update(float delta){
-
-    }
-    @Override
-    public void render(float v) {
-        Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-
-
-        // Hand + Extra deck expanding and playing
+    public void expandStatusAndCardPlaying(){
         if(Gdx.input.isTouched()){
             if((handExpandedFlag || extraExpandedFlag) && okay_to_select){
                 int index = -1;
@@ -410,9 +355,10 @@ public class GameScreen implements Screen {
                             indexes_to_remove = state_after_play.getKey();
                             for(int r = 0; r < indexes_to_remove.size(); r++) {
                                 boardCards[r] = null;
-                                System.out.println("index to remove " + r + ": " + indexes_to_remove.get(r));
                                 minionvehiczone.get(indexes_to_remove.get(r)).remove();
+                                expandedZones.get(indexes_to_remove.get(r)).remove();
                                 minionvehiczone.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
+                                expandedZones.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
                                 stage.addActor(minionvehiczone.get(indexes_to_remove.get(r)));
                             }
                             MatDeck.readd(matcopy, state_after_play.getValue());
@@ -478,15 +424,9 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        // End Hand + Extra Deck Expanding and Playing
+    }
 
-
-        stage.draw();
-
-        batch.begin();
-       // System.out.println("width: " + Gdx.graphics.getWidth());  // Width = 480
-       // System.out.println("height: " + Gdx.graphics.getHeight()); // Height = 320
-
+    public void printBatch(){
         int scrwidth = Gdx.graphics.getWidth();
         int scrheight = Gdx.graphics.getHeight();
         int cardwidth = scrwidth/5;
@@ -508,7 +448,74 @@ public class GameScreen implements Screen {
                 x_expand += cardwidth +15;
             }
         }
+    }
+    //
+    public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
+        expandSpriteList.clear();
+        if(hore == 0) {
+            ArrayList<Card> handCards = hand.getCards();
+            for (int i = 0; i < handCards.size(); i++) {
+                Texture mH = handCards.get(i).getImage();
+                TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
+                str = new Sprite(tr);
+                str.setSize(20, 20);
+                expandSpriteList.add(str);
+            }
+            okay_to_select = false;
+            extraExpandedFlag = false;
+            handExpandedFlag = true;
+            System.out.println("Hand expand");
+        }
+        else if(hore == 1){
+            ArrayList<Vehicle> vehiclist = extraDeck.getVehics();
+            for(int i = 0; i < vehiclist.size(); i++){
+                Texture mH = vehiclist.get(i).getImage();
+                TextureRegion tr = new TextureRegion(mH, mH.getWidth(), mH.getHeight());
+                str = new Sprite(tr);
+                str.setSize(20, 20);
+                expandSpriteList.add(str);
+            }
+            okay_to_select = false;
+            handExpandedFlag = false;
+            extraExpandedFlag = true;
+            System.out.println("Extra expand");
+        }
 
+        //TODO Check here for mill
+        ArrayList<Integer> milled = MatDeck.mill(4);
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
+
+
+    }
+    public void addActorToStage(Actor act){
+        stage.addActor(act);
+    }
+    @Override
+    public void show() {
+
+    }
+
+    public void update(float delta){
+
+    }
+    @Override
+    public void render(float v) {
+        Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+
+
+        // Hand + Extra deck expanding and playing
+        expandStatusAndCardPlaying();
+        // End Hand + Extra Deck Expanding and Playing
+
+
+        stage.draw();
+
+        batch.begin();
+       // System.out.println("width: " + Gdx.graphics.getWidth());  // Width = 480
+       // System.out.println("height: " + Gdx.graphics.getHeight()); // Height = 320
+        printBatch();
         batch.end();
     }
 

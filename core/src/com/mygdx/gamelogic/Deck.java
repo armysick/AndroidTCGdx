@@ -19,7 +19,7 @@ public class Deck {
     }
 
     public void fill_deck_1(){
-        cards.add(new Minion("demo minion1", new CardEffect(), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("twinsoldier", new CardEffect(), new Texture("twinsoldier.jpg")));
         cards.add(new Minion("demo minion2", new CardEffect(), new Texture("miniHand.jpg")));
         cards.add(new Minion("demo minion3", new CardEffect(), new Texture("twinsoldier.jpg")));
         cards.add(new Minion("demo minion4", new CardEffect(), new Texture("miniHand.jpg")));
