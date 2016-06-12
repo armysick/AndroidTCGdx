@@ -67,8 +67,11 @@ public class GameScreen implements Screen {
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
     Card[] boardCards = new Card[4];
     ArrayList<Image> minionvehiczone = new ArrayList<Image>();
+    ArrayList<Image> enemyminionvehiczone = new ArrayList<Image>();
     ArrayList<Image> expandedZones = new ArrayList<Image>();
+    ArrayList<Image> expandedEnemyZones = new ArrayList<Image>();
     ArrayList<Image> materialzone = new ArrayList<Image>();
+    ArrayList<Image> enemymaterialzone = new ArrayList<Image>();
     ArrayList<Label> numberslbls = new ArrayList<Label>();  // Order: Metal // Wood // Glass // Rubber
     int[] matcounters = {0,0,0,0};
 
@@ -95,9 +98,9 @@ public class GameScreen implements Screen {
         extraExpandedFlag = false;
 
 
-
-
         Gdx.input.setInputProcessor(stage);
+
+        //stageRotate();
         System.out.println(stage.getActors());
 
     }
@@ -108,9 +111,14 @@ public class GameScreen implements Screen {
         for(int h = 0 ; h < minionvehiczone.size() ; h++)
             stage.addActor(minionvehiczone.get(h));
 
+        for(int he = 0; he < enemyminionvehiczone.size(); he++)
+            stage.addActor(enemyminionvehiczone.get(he));
 
         for(int m = 0 ; m < materialzone.size(); m++)
             stage.addActor(materialzone.get(m));
+
+        for(int me = 0 ; me < enemymaterialzone.size(); me++)
+            stage.addActor(enemymaterialzone.get(me));
 
         for(int l = 0 ; l < numberslbls.size(); l++)
             stage.addActor(numberslbls.get(l));
@@ -143,6 +151,8 @@ public class GameScreen implements Screen {
             }
 
         });
+
+
 
     }
     public void loadTextures(){
@@ -177,6 +187,7 @@ public class GameScreen implements Screen {
                 }
                 for(int u = 0 ; u < expandedZones.size();u++){
                     expandedZones.get(u).remove();
+                    expandedEnemyZones.get(u).remove();
                 }
                 return true;
             }
@@ -189,47 +200,69 @@ public class GameScreen implements Screen {
         int x_coord = Gdx.graphics.getWidth()/10;
         int exp_x_coord = x_coord;
         for(int mvz = 0 ; mvz < 4 ; mvz++){
+            Image new_img2 = new Image(new Texture("cardzone.jpg"));
             Image new_img = new Image(new Texture("cardzone.jpg"));
             new_img.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));
+            new_img2.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));
             if(mvz == 3)
                 x_coord = (int) (Gdx.graphics.getWidth()/10 + 3*(new_img.getWidth() + Gdx.graphics.getWidth()/11));
             else if(mvz == 2)
                 x_coord += (int) (Gdx.graphics.getWidth() / 6.4) ;  //first part = boss card width
             new_img.setPosition(x_coord, hei - (new_img.getHeight()/2) - hei/5);
+            new_img2.setPosition(x_coord, Gdx.graphics.getHeight() - (float) (1.35*(hei - (new_img.getHeight()/2) - hei/5)));
 
 
             //expanded version
+            Image new_img2_expand = new Image(new Texture("cardzone.jpg"));
             Image new_img_expand = new Image(new Texture("cardzone.jpg"));
             new_img_expand.setSize((int) (new_img.getWidth()*2.5), (int) (new_img.getHeight()*2.5));
+            new_img2_expand.setSize((int) (new_img.getWidth()*2.5), (int) (new_img.getHeight()*2.5));
             new_img_expand.setPosition(exp_x_coord , hei - (new_img.getHeight()/2) - hei/5);
+            new_img2_expand.setPosition(Gdx.graphics.getWidth() - (exp_x_coord + new_img2.getWidth()), Gdx.graphics.getHeight() - (float)(0.7*new_img_expand.getY()));
+            new_img2_expand.rotateBy(180);
+            expandedEnemyZones.add(new_img2_expand);
             expandedZones.add(new_img_expand);
             //
 
             x_coord += new_img.getWidth() + (int) (Gdx.graphics.getWidth()/22);
             minionvehiczone.add(new_img);
+            enemyminionvehiczone.add(new_img2);
 
         }
-
+        // End Monster Zones
         // Material Zones
 
         x_coord = Gdx.graphics.getWidth()/6;
         exp_x_coord = x_coord;
         for(int mvz = 0 ; mvz < 4 ; mvz++){
             Image new_img = null;
-            if(mvz == 0)
+            Image new_img2 = null;
+            if(mvz == 0) {
                 new_img = new Image(new Texture("metal.jpg"));
-            else if(mvz == 1)
+                new_img2 = new Image(new Texture("metal.jpg"));
+            }
+            else if(mvz == 1) {
                 new_img = new Image(new Texture("wood.jpg"));
-            else if(mvz == 2)
+                new_img2 = new Image(new Texture("wood.jpg"));
+            }
+            else if(mvz == 2) {
                 new_img = new Image(new Texture("glass.jpg"));
-            else if(mvz == 3)
+                new_img2 = new Image(new Texture("glass.jpg"));
+            }
+            else if(mvz == 3) {
                 new_img = new Image(new Texture("rubber.jpg"));
+                new_img2 = new Image(new Texture("rubber.jpg"));
+            }
             new_img.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));
+            new_img2.setSize(new_img.getWidth(), new_img.getHeight());
             new_img.setPosition(x_coord, hei / 12);
+            new_img2.setPosition(x_coord + (Gdx.graphics.getWidth()/10), Gdx.graphics.getHeight() - new_img.getY());
+            new_img2.rotateBy(180);
 
 
             x_coord += new_img.getWidth() + (int) (Gdx.graphics.getWidth()/22);
             materialzone.add(new_img);
+            enemymaterialzone.add(new_img2);
 
         }
 
@@ -415,14 +448,20 @@ public class GameScreen implements Screen {
                 }
 
             }
+
+            // Zoom cards
             else if (!handExpandedFlag && !extraExpandedFlag){
                 int index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()));
 
-                if(index > -1) {
+                if(index > -1) {  // Player side
                     //System.out.println("GOT EM");
                     stage.addActor(expandedZones.get(index));
                 }
+                else if(index <= -1 && index != -9){
+                    stage.addActor(expandedEnemyZones.get(Math.abs(index)));
+                }
             }
+            // End Zoom cards
         }
     }
 
@@ -449,6 +488,21 @@ public class GameScreen implements Screen {
             }
         }
     }
+
+
+    /*
+    public void stageRotate(){
+        for (Actor a: stage.getActors()){
+            Actor a2 = a;
+            float y_coord = a.getY();
+            a2.setPosition(a.getX(), Gdx.graphics.getHeight() - y_coord);
+            a2.rotateBy(180);
+            stage2.addActor(a2);
+            a2.rotateBy(180);
+            a2.setPosition(a.getX(), y_coord);
+        }
+    }
+    */
     //
     public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
         expandSpriteList.clear();
@@ -511,6 +565,7 @@ public class GameScreen implements Screen {
 
 
         stage.draw();
+        //stage2.draw();
 
         batch.begin();
        // System.out.println("width: " + Gdx.graphics.getWidth());  // Width = 480
@@ -557,24 +612,30 @@ public class GameScreen implements Screen {
     }
 
     public int getZoneClickedFromCoords(int x, int y){
-        int answer = -1;
+        int answer = -9;
         int hei = Gdx.graphics.getHeight()/2;
 
         int zonewid = Gdx.graphics.getWidth() / 8;
         int zonehei = (int) (Gdx.graphics.getHeight() / 5.3);
         int x_coord = Gdx.graphics.getWidth()/10;
         int y_coord = hei - (zonehei / 2) - hei / 5;
+        int enemy_y_coord = Gdx.graphics.getHeight() - (int) (1.35*(hei - ((Gdx.graphics.getHeight()/5.3)/2) - hei/5));
         for(int mvz = 0 ; mvz < 4 ; mvz++) {
 
 
-            if(mvz == 3)
-                x_coord = (int) (Gdx.graphics.getWidth()/10 + 3*(zonewid + Gdx.graphics.getWidth()/11));
+            if(mvz == 3) {
+                x_coord = (int) (Gdx.graphics.getWidth() / 10 + 3 * (zonewid + Gdx.graphics.getWidth() / 11));
+            }
             else if(mvz == 2)
                 x_coord += (int) (Gdx.graphics.getWidth() / 6.4) ;  //first part = boss card width
 
             if(x >= x_coord && x <= (x_coord + zonewid) && y >= y_coord && y <= y_coord + zonehei) {
                 System.out.println(" x +- y " + x + " -- "  + y);
                 answer = mvz;
+            }
+            else if(x >= x_coord && x <= (x_coord + zonewid) && y >= enemy_y_coord && y <= enemy_y_coord + zonehei){
+                System.out.println(" x +- y " + x + " -- "  + y);
+                answer = -mvz;
             }
             x_coord += zonewid + (int) (Gdx.graphics.getWidth()/22);
         }
