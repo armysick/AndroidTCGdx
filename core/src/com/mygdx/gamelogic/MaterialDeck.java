@@ -81,4 +81,25 @@ public class MaterialDeck {
         return finalmilled;
 
     }
+
+    public void readd(int[] prev, int[] curr){
+
+        System.out.println("MATS SIZE BEFORE: " + mats.size());
+        for(int i = 0 ; i < 4 ; i++){
+            System.out.println("mat counter: " + prev[i]);
+            System.out.println("new counter: " + curr[i]);
+            for(int x = 0; x <(prev[i] - curr[i]); x++){
+
+                if(i == 0)
+                    mats.add(new Mats("metal", new CardEffect(), new Texture("metal.jpg")));  // dá 100
+                else if(i == 1)
+                    mats.add(new Mats("wood", new CardEffect(), new Texture("wood.jpg")));  // retira 100
+                else if(i == 2)
+                   mats.add(new Mats("glass", new CardEffect(), new Texture("glass.jpg")));  // Draw
+                else if(i == 3)
+                    mats.add(new Mats("rubber", new CardEffect(), new Texture("rubber.jpg"))); // mill
+            }
+        }
+        System.out.println("MATS SIZE AFTER: " + mats.size());
+    }
 }

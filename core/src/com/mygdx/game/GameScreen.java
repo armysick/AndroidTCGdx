@@ -331,6 +331,13 @@ public class GameScreen implements Screen {
 
 
     }
+
+    public boolean fullboard(){
+        for(Card c: boardCards)
+            if(c == null)
+                return false;
+        return true;
+    }
     //
     public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
         expandSpriteList.clear();
@@ -364,7 +371,7 @@ public class GameScreen implements Screen {
         }
 
         //TODO Check here for mill
-        ArrayList<Integer> milled = MatDeck.mill(15);
+        ArrayList<Integer> milled = MatDeck.mill(4);
         handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
 
 
@@ -386,6 +393,8 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
+
+        // Hand + Extra deck expanding and playing
         if(Gdx.input.isTouched()){
             if((handExpandedFlag || extraExpandedFlag) && okay_to_select){
                 int index = -1;
@@ -394,6 +403,7 @@ public class GameScreen implements Screen {
                     AbstractMap.SimpleEntry<ArrayList<Integer>, int[]> state_after_play = null;
                     ArrayList<Integer> indexes_to_remove = new ArrayList<Integer>();
                     if(extraExpandedFlag) {
+                        int[] matcopy =matcounters.clone();
                         state_after_play = extraDeck.getVehics().get(index).playvehicle(boardCards, matcounters);
                         if(state_after_play != null) {
                             indexes_to_remove.clear();
@@ -405,12 +415,15 @@ public class GameScreen implements Screen {
                                 minionvehiczone.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
                                 stage.addActor(minionvehiczone.get(indexes_to_remove.get(r)));
                             }
-                            matcounters = state_after_play.getValue();
+                            MatDeck.readd(matcopy, state_after_play.getValue());
+                            //matcounters = state_after_play.getValue();
                             handleMill(0,0,0,0); // update label values
                         }
                     }
                     for(int i = 0; i < minionvehiczone.size(); i++) {
                         if(extraExpandedFlag && state_after_play == null)
+                            break;
+                        if(handExpandedFlag && fullboard())
                             break;
                         TextureRegionDrawable texdraw = (TextureRegionDrawable) minionvehiczone.get(i).getDrawable();
                         TextureRegion texreg = texdraw.getRegion();
@@ -465,6 +478,8 @@ public class GameScreen implements Screen {
                 }
             }
         }
+        // End Hand + Extra Deck Expanding and Playing
+
 
         stage.draw();
 
@@ -495,9 +510,6 @@ public class GameScreen implements Screen {
         }
 
         batch.end();
-        /*batch.begin();
-            renderBackground();
-        batch.end();*/
     }
 
 
