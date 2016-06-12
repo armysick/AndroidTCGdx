@@ -48,7 +48,9 @@ public class GameScreen implements Screen {
     Image bgndImage;
     Image miniHand;
     Image bosserinoImg;
+    Image enemyBosserinoImg;
     Image expandBosserino;
+    Image enemyexpandBosserino;
     SpriteBatch batch = new SpriteBatch();
     Skin skin;
     Stage stage;
@@ -60,6 +62,7 @@ public class GameScreen implements Screen {
     ExtraDeck extraDeck;
     Hand hand;
     Boss bosserino;
+    Boss enemybosserino;
     boolean handExpandedFlag;
     boolean extraExpandedFlag;
     boolean okay_to_select = false;
@@ -93,6 +96,7 @@ public class GameScreen implements Screen {
         loadStartingHand();
         stage.addActor(bosserinoImg);
         stage.addActor(miniHand);
+        stage.addActor(enemyBosserinoImg);
 
         handExpandedFlag = false;
         extraExpandedFlag = false;
@@ -152,6 +156,37 @@ public class GameScreen implements Screen {
 
         });
 
+
+
+        // ENEMY BOSS
+
+        enemybosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
+        enemyBosserinoImg = new Image(enemybosserino.getImage());
+        enemyBosserinoImg.setSize((int) (Gdx.graphics.getWidth() / 6.4),(int) (Gdx.graphics.getHeight()/4.3));
+        enemyBosserinoImg.setPosition(wid + (enemyBosserinoImg.getWidth()/2) , hei + enemyBosserinoImg.getHeight() + Gdx.graphics.getHeight()/20);
+        enemyBosserinoImg.rotateBy(180);
+
+        //expanded version
+        enemyexpandBosserino = new Image(enemybosserino.getImage());
+        enemyexpandBosserino.setSize((int) (enemyBosserinoImg.getWidth()*2.5), (int) (enemyBosserinoImg.getHeight()*2.5));
+        enemyexpandBosserino.setPosition(wid - (bosserinoImg.getWidth()/2) , hei - (bosserinoImg.getHeight()/2) - hei/5);
+
+        //
+
+        enemyBosserinoImg.addListener(new InputListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+
+                stage.addActor(enemyexpandBosserino);
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y,int pointer, int button){
+                enemyexpandBosserino.remove();
+            }
+
+        });
 
 
     }
@@ -455,10 +490,10 @@ public class GameScreen implements Screen {
 
                 if(index > -1) {  // Player side
                     //System.out.println("GOT EM");
-                    stage.addActor(expandedZones.get(index));
+                    stage.addActor(expandedZones.get(index - 1));
                 }
                 else if(index <= -1 && index != -9){
-                    stage.addActor(expandedEnemyZones.get(Math.abs(index)));
+                    stage.addActor(expandedEnemyZones.get(Math.abs(index) - 1));
                 }
             }
             // End Zoom cards
@@ -631,11 +666,13 @@ public class GameScreen implements Screen {
 
             if(x >= x_coord && x <= (x_coord + zonewid) && y >= y_coord && y <= y_coord + zonehei) {
                 System.out.println(" x +- y " + x + " -- "  + y);
-                answer = mvz;
+                System.out.println(" index: " + mvz);
+                answer = mvz +1;
             }
             else if(x >= x_coord && x <= (x_coord + zonewid) && y >= enemy_y_coord && y <= enemy_y_coord + zonehei){
                 System.out.println(" x +- y " + x + " -- "  + y);
-                answer = -mvz;
+                System.out.println(" index: " + (-mvz));
+                answer = -(mvz + 1);
             }
             x_coord += zonewid + (int) (Gdx.graphics.getWidth()/22);
         }
