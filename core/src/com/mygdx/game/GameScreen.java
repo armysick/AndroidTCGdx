@@ -350,6 +350,10 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
                 attackFlag = true;
+                //HEREBOY
+                attack_button.remove();
+                attack_button.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("attackingbutton.jpg"))));
+                stage.addActor(attack_button);
                 return true;
             }
             @Override
@@ -561,7 +565,6 @@ public class GameScreen implements Screen {
                 int index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()));
 
                 if(index > -1) {  // Player side
-                    //System.out.println("GOT EM");
                     stage.addActor(expandedZones.get(index - 1));
                 }
                 else if(index <= -1 && index != -9){
@@ -619,21 +622,42 @@ public class GameScreen implements Screen {
                         if(boardCards[index-1] instanceof Vehicle) {
                             Vehicle att = (Vehicle)boardCards[index-1];
                             if (att.getAPLeft() > 0)
-                                combat.setAttacker((Vehicle) boardCards[index - 1]);
+                                combat.setAttacker((Vehicle) boardCards[index - 1], index-1);
                         }
                     }
                 }
                 else if(combat.getDefender() == null){
                     if(index < 0 ){
-                        if(boardCards[Math.abs(index) - 1] instanceof Vehicle) {
-                            combat.setDefender((Vehicle) boardCards[Math.abs(index) - 1]);
+                        if(enemyBoardCards[Math.abs(index) - 1] instanceof Vehicle) {
+                            combat.setDefender((Vehicle) enemyBoardCards[Math.abs(index) - 1], (Math.abs(index) - 1));
                             //TODO Combat calculations right here + add boss targetable
+                            int defindex = combat.fight();  // returns destroyed indexes;
+                            if(defindex != -1){
+                                enemyBoardCards[defindex] = null;
+                                enemyminionvehiczone.get(defindex).remove();
+                                expandedEnemyZones.get(defindex).remove();
+                                enemyminionvehiczone.get(defindex).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
+                                expandedEnemyZones.get(defindex).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
+                                stage.addActor(enemyminionvehiczone.get(defindex));
+                            }
+                            else {
+                                attackFlag = false;
+                                attack_button.remove();
+                                attack_button.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("attackbutton.jpg"))));
+                                stage.addActor(attack_button);
+                                okay_to_select = false;
+                            }
+                            combat.reset();
                         }
                     }
                 }
             }
             else if(okay_to_select) {
                 attackFlag = false;
+                attack_button.remove();
+                attack_button.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("attackbutton.jpg"))));
+                stage.addActor(attack_button);
+                okay_to_select = false;
                 combat.reset();
             }
         }
@@ -702,9 +726,7 @@ public class GameScreen implements Screen {
             System.out.println("Extra expand");
         }
 
-        //TODO Check here for mill
-        /*ArrayList<Integer> milled = MatDeck.mill(4);
-        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));*/
+
 
 
     }
