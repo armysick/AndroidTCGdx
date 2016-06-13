@@ -43,6 +43,16 @@ public class Deck {
     }
 
     /**
+     * testing purposes
+     */
+    public void fill_deck_3(){
+        cards.add(new Minion("vanillasoldier", new CardEffect(0)));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0)));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0)));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0)));
+    }
+
+    /**
      *
      * @param qty - to be drawn from deck
      * @return ArrayList of Card - With cards drawn

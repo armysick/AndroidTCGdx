@@ -25,6 +25,13 @@ public class Vehicle extends Card {
         this.apleft = attack_power;
     }
 
+    public Vehicle(String name, CardEffect eff,int mat_cost, int trip_cost, int attack_power){
+        super(name, eff);
+        this.mat_cost = mat_cost;
+        this.trip_cost = trip_cost;
+        this.attack_power = attack_power;
+        this.apleft = attack_power;
+    }
     /**
      *
      * Checks vehicle has enough resources to be summoned and plays it if successful
