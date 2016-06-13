@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -35,6 +36,7 @@ public class MenuScreen implements Screen {
     TextButton normalModeButton;
     private Screen currScreen;
     private boolean readytoplay = false;
+    private boolean gameEnded = false;
 
 
     public MenuScreen(TCG game){
@@ -69,13 +71,23 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render (float delta) {
+
         Gdx.gl.glClearColor(135/255f, 135/255f, 135/255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        if(gameEnded){
+            Image youwin = new Image(new Texture("youwin.jpg"));
+            youwin.setSize(Gdx.graphics.getWidth()/3, Gdx.graphics.getHeight()/5);
+            youwin.setPosition(Gdx.graphics.getWidth()/2 - (youwin.getWidth()/2), Gdx.graphics.getHeight()/2 - (youwin.getHeight()/2));
+            stage.addActor(youwin);
+            gameEnded = false;
+            readytoplay = false;
+        }
         stage.draw();
 
         if(readytoplay){
             game.setScreen(new GameScreen(game, this));
+            this.gameEnded = true;
         }
     }
 

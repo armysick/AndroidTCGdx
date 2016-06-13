@@ -45,6 +45,7 @@ import java.util.ArrayList;
 public class GameScreen implements Screen {
     private final TCG game;
     private final Screen parentscr;
+    private boolean gameover = false;
     private Combat combat;
     Texture bgndTex;
     Image bgndImage;
@@ -627,10 +628,10 @@ public class GameScreen implements Screen {
                     }
                 }
                 else if(combat.getDefender() == null){
-                    if(index < 0 ){
+                    if(index < 0  && index !=-420){
                         if(enemyBoardCards[Math.abs(index) - 1] instanceof Vehicle) {
                             combat.setDefender((Vehicle) enemyBoardCards[Math.abs(index) - 1], (Math.abs(index) - 1));
-                            //TODO Combat calculations right here + add boss targetable
+                            //TODO add boss targetable
                             int defindex = combat.fight();  // returns destroyed indexes;
                             if(defindex != -1){
                                 enemyBoardCards[defindex] = null;
@@ -649,7 +650,24 @@ public class GameScreen implements Screen {
                             }
                             combat.reset();
                         }
+
                     }
+                    else if(index == -420){
+                        gameover = true;
+                        for(int e = 0; e < enemyBoardCards.length ; e++){
+                            if(enemyBoardCards[e] instanceof Vehicle)
+                                gameover = false;
+                        }
+                        if(!gameover){
+                            attackFlag = false;
+                            attack_button.remove();
+                            attack_button.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("attackbutton.jpg"))));
+                            stage.addActor(attack_button);
+                            okay_to_select = false;
+                        }
+
+                    }
+
                 }
             }
             else if(okay_to_select) {
@@ -747,6 +765,9 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 
+        if(gameover){
+            game.setScreen(parentscr);
+        }
 
         // Hand + Extra deck expanding and playing
         if(playerturn) {
@@ -837,6 +858,9 @@ public class GameScreen implements Screen {
                 System.out.println(" index: " + (-mvz));
                 answer = -(mvz + 1);
             }
+            else if(x <= enemyBosserinoImg.getX() && x >= (enemyBosserinoImg.getX() - enemyBosserinoImg.getWidth())
+                    && y<=enemyBosserinoImg.getY() && y >= (enemyBosserinoImg.getY() - enemyBosserinoImg.getHeight()) )
+                answer = -420;
             x_coord += zonewid + (int) (Gdx.graphics.getWidth()/22);
         }
         return answer;
