@@ -21,4 +21,12 @@ public class Boss extends Card {
     public int getStartHand(){
         return this.start_hand;
     }
+
+    public int getDraws(){
+        return this.draws;
+    }
+
+    public int getMills(){
+        return this.mills;
+    }
 }

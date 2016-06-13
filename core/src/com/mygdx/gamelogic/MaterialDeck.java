@@ -17,10 +17,10 @@ public class MaterialDeck {
 
     public void fill_deck_1(){
         for(int i = 0 ; i<5 ;i++) {
-            mats.add(new Mats("metal", new CardEffect(), new Texture("metal.jpg")));  // dá 100
-            mats.add(new Mats("wood", new CardEffect(), new Texture("wood.jpg")));  // retira 100
-            mats.add(new Mats("glass", new CardEffect(), new Texture("glass.jpg")));  // Draw
-            mats.add(new Mats("rubber", new CardEffect(), new Texture("rubber.jpg"))); // mill
+            mats.add(new Mats("metal", new CardEffect(0), new Texture("metal.jpg")));  // dá 100
+            mats.add(new Mats("wood", new CardEffect(0), new Texture("wood.jpg")));  // retira 100
+            mats.add(new Mats("glass", new CardEffect(0), new Texture("glass.jpg")));  // Draw
+            mats.add(new Mats("rubber", new CardEffect(0), new Texture("rubber.jpg"))); // mill
         }
     }
 
@@ -91,13 +91,13 @@ public class MaterialDeck {
             for(int x = 0; x <(prev[i] - curr[i]); x++){
 
                 if(i == 0)
-                    mats.add(new Mats("metal", new CardEffect(), new Texture("metal.jpg")));  // dá 100
+                    mats.add(new Mats("metal", new CardEffect(0), new Texture("metal.jpg")));  // dá 100
                 else if(i == 1)
-                    mats.add(new Mats("wood", new CardEffect(), new Texture("wood.jpg")));  // retira 100
+                    mats.add(new Mats("wood", new CardEffect(0), new Texture("wood.jpg")));  // retira 100
                 else if(i == 2)
-                   mats.add(new Mats("glass", new CardEffect(), new Texture("glass.jpg")));  // Draw
+                   mats.add(new Mats("glass", new CardEffect(0), new Texture("glass.jpg")));  // Draw
                 else if(i == 3)
-                    mats.add(new Mats("rubber", new CardEffect(), new Texture("rubber.jpg"))); // mill
+                    mats.add(new Mats("rubber", new CardEffect(0), new Texture("rubber.jpg"))); // mill
             }
         }
         System.out.println("MATS SIZE AFTER: " + mats.size());

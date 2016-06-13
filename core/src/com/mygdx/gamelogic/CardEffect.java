@@ -5,7 +5,23 @@ package com.mygdx.gamelogic;
  */
 public class CardEffect {
 
-    public CardEffect(){
+    private int id;
+    public CardEffect(int id){
+        this.id = id;
+    }
 
+    public BoardState activate(){
+
+        switch(id) {
+            case 2:  // pickaxesoldier
+                return pickaxesoldiereff();
+        }
+        return new BoardState();
+    }
+
+    public BoardState pickaxesoldiereff(){
+        BoardState bs = new BoardState();
+        bs.mill(1);
+        return bs;
     }
 }

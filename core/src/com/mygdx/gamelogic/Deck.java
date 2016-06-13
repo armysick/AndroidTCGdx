@@ -19,14 +19,14 @@ public class Deck {
     }
 
     public void fill_deck_1(){
-        cards.add(new Minion("twinsoldier", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion2", new CardEffect(), new Texture("miniHand.jpg")));
-        cards.add(new Minion("demo minion3", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion4", new CardEffect(), new Texture("miniHand.jpg")));
-        cards.add(new Minion("demo minion5", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion6", new CardEffect(), new Texture("miniHand.jpg")));
-        cards.add(new Minion("demo minion7", new CardEffect(), new Texture("twinsoldier.jpg")));
-        cards.add(new Minion("demo minion8", new CardEffect(), new Texture("highgeneralboss.jpg")));
+        cards.add(new Minion("twinsoldier", new CardEffect(1), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("twinsoldier", new CardEffect(1), new Texture("twinsoldier.jpg")));
+        cards.add(new Minion("pickaxesoldier", new CardEffect(2), new Texture("pickaxesoldier.jpg")));
+        cards.add(new Minion("pickaxesoldier", new CardEffect(2), new Texture("pickaxesoldier.jpg")));
+        cards.add(new Minion("demo minion5", new CardEffect(0), new Texture("miniHand.jpg")));
+        cards.add(new Minion("demo minion6", new CardEffect(0), new Texture("miniHand.jpg")));
+        cards.add(new Minion("demo minion7", new CardEffect(0), new Texture("miniHand.jpg")));
+        cards.add(new Minion("demo minion8", new CardEffect(0), new Texture("highgeneralboss.jpg")));
     }
 
     public ArrayList<Card> draw(int qty){

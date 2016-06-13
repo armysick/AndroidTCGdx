@@ -33,6 +33,11 @@ public class Card implements Clickable{
     public Texture getImage(){
         return this.img;
     }
+    public CardEffect getEff(){return this.eff;};
+
+    public BoardState activateEffect(){
+        return this.getEff().activate();
+    }
     @Override
     public void setupClickListener() {
     }

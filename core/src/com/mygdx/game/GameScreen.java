@@ -128,7 +128,7 @@ public class GameScreen implements Screen {
             stage.addActor(numberslbls.get(l));
     }
     public void loadStartingBoard(){
-        bosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
+        bosserino = new Boss("highgeneral", new CardEffect(0), new Texture("highgeneralboss.jpg"), 4, 2, 2);
         bosserinoImg = new Image(bosserino.getImage());
         bosserinoImg.setSize((int) (Gdx.graphics.getWidth() / 6.4),(int) (Gdx.graphics.getHeight()/4.3));
         int wid = Gdx.graphics.getWidth()/2;
@@ -160,7 +160,7 @@ public class GameScreen implements Screen {
 
         // ENEMY BOSS
 
-        enemybosserino = new Boss("highgeneral", new CardEffect(), new Texture("highgeneralboss.jpg"), 4, 2, 2);
+        enemybosserino = new Boss("highgeneral", new CardEffect(0), new Texture("roboticgeneral.jpg"), 4, 2, 2);
         enemyBosserinoImg = new Image(enemybosserino.getImage());
         enemyBosserinoImg.setSize((int) (Gdx.graphics.getWidth() / 6.4),(int) (Gdx.graphics.getHeight()/4.3));
         enemyBosserinoImg.setPosition(wid + (enemyBosserinoImg.getWidth()/2) , hei + enemyBosserinoImg.getHeight() + Gdx.graphics.getHeight()/20);
@@ -374,7 +374,9 @@ public class GameScreen implements Screen {
 
         ArrayList<Card> drawn = new ArrayList<Card>();
         //drawn = MainDeck.draw(bosserino.getStartHand());
-        drawn = MainDeck.draw(8);
+        drawn = MainDeck.draw(bosserino.getStartHand() + bosserino.getDraws());
+        ArrayList<Integer> milled = MatDeck.mill(bosserino.getMills());
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
         System.out.println("drew: " + drawn.size());
         hand.addCardsToHand(drawn);
     }
@@ -467,6 +469,7 @@ public class GameScreen implements Screen {
                             stage.addActor(minionvehiczone.get(i));
                             if(handExpandedFlag) {
                                 boardCards[i] = hand.getCards().get(index);
+                                handleEffects(hand.getCards().get(index).activateEffect());
                                 hand.remove(index);
                             }
                             if(extraExpandedFlag){
@@ -524,20 +527,20 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void handleEffects(BoardState bs){
+        System.out.println("bs.getDrawn():  " + bs.getDrawn());
+        System.out.println("bs.getMilled() : " + bs.getMilled());
+        if(bs.getMilled() != 0){
 
-    /*
-    public void stageRotate(){
-        for (Actor a: stage.getActors()){
-            Actor a2 = a;
-            float y_coord = a.getY();
-            a2.setPosition(a.getX(), Gdx.graphics.getHeight() - y_coord);
-            a2.rotateBy(180);
-            stage2.addActor(a2);
-            a2.rotateBy(180);
-            a2.setPosition(a.getX(), y_coord);
+            ArrayList<Integer> milled = MatDeck.mill(bs.getMilled());
+            handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
+        }
+        if(bs.getDrawn() != 0){
+            MainDeck.draw(bs.getDrawn());
         }
     }
-    */
+
+
     //
     public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
         expandSpriteList.clear();
@@ -571,8 +574,8 @@ public class GameScreen implements Screen {
         }
 
         //TODO Check here for mill
-        ArrayList<Integer> milled = MatDeck.mill(4);
-        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
+        /*ArrayList<Integer> milled = MatDeck.mill(4);
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));*/
 
 
     }

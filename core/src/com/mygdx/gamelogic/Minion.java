@@ -12,4 +12,6 @@ public class Minion extends Card {
     public Minion(String name, CardEffect eff, Texture img){
         super(name, eff, img);
     }
+
+
 }
