@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.Utils.Utilidades;
 import com.mygdx.gamelogic.*;
 
+import java.awt.Robot;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public class GameScreen implements Screen {
     Image expandBosserino;
     Image enemyexpandBosserino;
     Image attack_button;
+    Image endturn_button;
     SpriteBatch batch = new SpriteBatch();
     Skin skin;
     Stage stage;
@@ -108,6 +110,7 @@ public class GameScreen implements Screen {
         stage.addActor(miniHand);
         stage.addActor(enemyBosserinoImg);
         stage.addActor(attack_button);
+        stage.addActor(endturn_button);
 
         handExpandedFlag = false;
         extraExpandedFlag = false;
@@ -172,7 +175,7 @@ public class GameScreen implements Screen {
 
         // ENEMY BOSS
 
-        enemybosserino = new Boss("highgeneral", new CardEffect(0), new Texture("roboticgeneral.jpg"), 4, 2, 2);
+        enemybosserino = new Boss("roboticgeneral", new CardEffect(0), new Texture("roboticgeneral.jpg"), 0, 1, 0);
         enemyBosserinoImg = new Image(enemybosserino.getImage());
         enemyBosserinoImg.setSize((int) (Gdx.graphics.getWidth() / 6.4),(int) (Gdx.graphics.getHeight()/4.3));
         enemyBosserinoImg.setPosition(wid + (enemyBosserinoImg.getWidth()/2) , hei + enemyBosserinoImg.getHeight() + Gdx.graphics.getHeight()/20);
@@ -336,7 +339,6 @@ public class GameScreen implements Screen {
             x_coord += (Gdx.graphics.getWidth()/8) + (int) (Gdx.graphics.getWidth()/22);
         }
 
-        //
 
         //ATTACK button
 
@@ -356,6 +358,23 @@ public class GameScreen implements Screen {
             }
         });
 
+
+        // End Turn Button
+
+        endturn_button = new Image(new Texture("endturn.jpg"));
+        endturn_button.setSize(Gdx.graphics.getWidth()/12, Gdx.graphics.getHeight()/4);
+        endturn_button.setPosition(Gdx.graphics.getWidth() - endturn_button.getWidth(), Gdx.graphics.getHeight()/2 - (attack_button.getHeight()/2));
+        endturn_button.toFront();
+        endturn_button.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y,int pointer, int button){
+                playerturn = false;
+            }
+        });
 
 
     }
@@ -624,6 +643,7 @@ public class GameScreen implements Screen {
     //ROBOT PLAYS
 
     public void robotturn(){
+        RobotHand.addCardsToHand(RobotMainDeck.draw(enemybosserino.getDraws()));
         if(RobotHand.getCards().size() > 0){
             for(int i = 0; i < enemyBoardCards.length ; i++) {
                 if(enemyBoardCards[i] == null) {
@@ -631,13 +651,6 @@ public class GameScreen implements Screen {
                     //handleEffects(hand.getCards().get(index).activateEffect()); NO NEED YET
                     RobotHand.remove(0);
                     if(RobotExtraDeck.getVehics().size() > 0){
-                        // RobotExtraDeck.getVehics().get(0).playvehicle(enemyBoardCards); Skipping it, no need to check anything @Robot
-                        /*enemyBoardCards[i] = null;
-                        minionvehiczone.get(indexes_to_remove.get(r)).remove();
-                        expandedZones.get(indexes_to_remove.get(r)).remove();
-                        minionvehiczone.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
-                        expandedZones.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
-                        stage.addActor(minionvehiczone.get(indexes_to_remove.get(r)));*/
                         enemyminionvehiczone.get(i).remove();
                         expandedEnemyZones.get(i).remove();
                         Texture texturino = RobotExtraDeck.getVehics().get(0).getImage();
@@ -647,12 +660,15 @@ public class GameScreen implements Screen {
                         enemyBoardCards[i] = RobotExtraDeck.getVehics().get(0);
                         RobotExtraDeck.remove(0);
                     }
-                    playerturn = true;
+
                     break;
                 }
             }
-
         }
+        hand.addCardsToHand(MainDeck.draw(bosserino.getDraws()));
+        ArrayList<Integer> milled = MatDeck.mill(bosserino.getMills());
+        handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
+        playerturn = true;
     }
     //
     public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
