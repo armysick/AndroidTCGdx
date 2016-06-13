@@ -14,11 +14,15 @@ public class Vehicle extends Card {
 
     private int mat_cost;
     private int trip_cost; //tripulation cost
+    private int attack_power;
+    private int apleft; //attack power remaining each turn
 
-    public Vehicle(String name, CardEffect eff, Texture img, int mat_cost, int trip_cost){
+    public Vehicle(String name, CardEffect eff, Texture img, int mat_cost, int trip_cost, int attack_power){
         super(name, eff, img);
         this.mat_cost = mat_cost;
         this.trip_cost = trip_cost;
+        this.attack_power = attack_power;
+        this.apleft = attack_power;
     }
 
     public AbstractMap.SimpleEntry<ArrayList<Integer>, int[]> playvehicle(Card[] board, int[] mats){
@@ -55,5 +59,9 @@ public class Vehicle extends Card {
         }
         return null;
 
+    }
+
+    public int getAPLeft(){
+        return this.apleft;
     }
 }

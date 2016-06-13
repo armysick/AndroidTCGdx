@@ -338,12 +338,15 @@ public class GameScreen implements Screen {
         attack_button.setSize(Gdx.graphics.getWidth()/12, Gdx.graphics.getHeight()/4);
         attack_button.setPosition(5, Gdx.graphics.getHeight()/2 - (attack_button.getHeight()/2));
         attack_button.toFront();
-        attack_button.addListener(new ClickListener(){
-
+        attack_button.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
                 attackFlag = true;
-                return attackFlag;
+                return true;
+            }
+            @Override
+            public void touchUp(InputEvent event, float x, float y,int pointer, int button){
+                okay_to_select = true;
             }
         });
 
@@ -572,8 +575,11 @@ public class GameScreen implements Screen {
             if((index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()))) != -9){
                 if(combat.getAttacker() == null){
                     if(index > 0){
-                        if(boardCards[index-1] instanceof Vehicle)
-                            combat.setAttacker((Vehicle)boardCards[index-1]);
+                        if(boardCards[index-1] instanceof Vehicle) {
+                            Vehicle att = (Vehicle)boardCards[index-1];
+                            if (att.getAPLeft() > 0)
+                                combat.setAttacker((Vehicle) boardCards[index - 1]);
+                        }
                     }
                 }
                 else if(combat.getDefender() == null){
@@ -584,6 +590,10 @@ public class GameScreen implements Screen {
                         }
                     }
                 }
+            }
+            else if(okay_to_select) {
+                attackFlag = false;
+                combat.reset();
             }
         }
     }
@@ -648,17 +658,19 @@ public class GameScreen implements Screen {
         if(attackFlag){
             handleTargets();
         }
-        expandStatusAndCardPlaying();
+        else {
+            expandStatusAndCardPlaying();
+        }
         // End Hand + Extra Deck Expanding and Playing
 
 
         stage.draw();
-        //stage2.draw();
 
         batch.begin();
        // System.out.println("width: " + Gdx.graphics.getWidth());  // Width = 480
        // System.out.println("height: " + Gdx.graphics.getHeight()); // Height = 320
-        printBatch();
+        if(!attackFlag)
+            printBatch();
         batch.end();
     }
 

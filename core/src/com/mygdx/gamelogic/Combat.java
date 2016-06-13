@@ -22,4 +22,9 @@ public class Combat {
         this.defender = defender;
     }
 
+    public void reset(){
+        this.attacker = null;
+        this.defender = null;
+    }
+
 }
