@@ -26,6 +26,9 @@ public class Combat {
         this.defindex = index;
     }
 
+    /**
+     *  Resets combat vehicles to null and indexes to -1
+     */
     public void reset(){
         this.attacker = null;
         this.attindex = -1;

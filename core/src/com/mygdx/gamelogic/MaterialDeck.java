@@ -15,6 +15,9 @@ public class MaterialDeck {
 
     }
 
+    /**
+     * Automatically fills with default deck
+     */
     public void fill_deck_1(){
         for(int i = 0 ; i<5 ;i++) {
             mats.add(new Mats("metal", new CardEffect(0), new Texture("metal.jpg")));  // dá 100
@@ -24,6 +27,11 @@ public class MaterialDeck {
         }
     }
 
+    /**
+     *
+     * @param qty - quantity to be drawn [milled]
+     * @return ArrayList of cards - Cards [materials] milled
+     */
     public ArrayList<Card> draw(int qty){
         ArrayList<Card> drawn = new ArrayList<Card>();
         int range = mats.size();
@@ -82,6 +90,11 @@ public class MaterialDeck {
 
     }
 
+    /**
+     * readds materials to deck based on counter differences / changes
+     * @param prev - previous counter for each material type
+     * @param curr - current counter for each material type
+     */
     public void readd(int[] prev, int[] curr){
 
         System.out.println("MATS SIZE BEFORE: " + mats.size());

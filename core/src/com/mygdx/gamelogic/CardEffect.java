@@ -10,6 +10,10 @@ public class CardEffect {
         this.id = id;
     }
 
+    /**
+     *
+     * @return BoardState [changes] given by which effect was activated
+     */
     public BoardState activate(){
 
         switch(id) {

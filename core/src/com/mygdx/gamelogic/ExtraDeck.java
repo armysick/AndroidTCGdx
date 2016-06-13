@@ -19,6 +19,9 @@ public class ExtraDeck{
 
     }
 
+    /**
+     * Automatically fills default deck
+     */
     public void fill_extra_deck_1(){
         vehics.add(new Vehicle("warmotocycle", new CardEffect(0), new Texture("warmotocycle.jpg"), 1, 1, 1000));
         vehics.add(new Vehicle("armoredcar", new CardEffect(0), new Texture("armoredcar.jpg"), 2, 2, 2000));
@@ -26,6 +29,9 @@ public class ExtraDeck{
         //vehics.add(new Vehicle("vehic4", new CardEffect(0), new Texture("demominion2.jpg"), 4, 4, 4000));
     }
 
+    /**
+     * Automatically fills default robot deck
+     */
     public void fill_extra_deck_2(){
         vehics.add(new Vehicle("humanoid", new CardEffect(0), new Texture("humanoid.jpg"), 1, 0, 1000));
         vehics.add(new Vehicle("humanoid", new CardEffect(0), new Texture("humanoid.jpg"), 1, 0, 1000));

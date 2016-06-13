@@ -33,7 +33,10 @@ public class Hand implements Clickable {
     }
 
 
-
+    /**
+     * adds cards to hand
+     * @param toadd - ArrayList with cards to add
+     */
     public void addCardsToHand(ArrayList<Card> toadd){
         cards.addAll(toadd);
     }

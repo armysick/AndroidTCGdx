@@ -11,6 +11,15 @@ public class Boss extends Card {
     private int draws;
     private int mills;
 
+    /**
+     * Constructor
+     * @param name - Boss name
+     * @param eff - Card Effect
+     * @param img - texture
+     * @param start_hand - starting hand size
+     * @param draws - draws per turn
+     * @param mills - mills per turn
+     */
     public Boss(String name, CardEffect eff, Texture img, int start_hand, int draws, int mills){
         super(name, eff, img);
         this.start_hand = start_hand;

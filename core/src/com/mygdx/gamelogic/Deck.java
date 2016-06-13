@@ -18,6 +18,9 @@ public class Deck {
 
     }
 
+    /**
+     * Automatically fill a default deck
+     */
     public void fill_deck_1(){
         cards.add(new Minion("twinsoldier", new CardEffect(1), new Texture("twinsoldier.jpg")));
         cards.add(new Minion("twinsoldier", new CardEffect(1), new Texture("twinsoldier.jpg")));
@@ -29,6 +32,9 @@ public class Deck {
         cards.add(new Minion("handysoldier", new CardEffect(3), new Texture("handysoldier.jpg")));
     }
 
+    /**
+     * Automatically fill robot default deck
+     */
     public void fill_deck_2(){
         cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
         cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
@@ -36,6 +42,11 @@ public class Deck {
         cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
     }
 
+    /**
+     *
+     * @param qty - to be drawn from deck
+     * @return ArrayList of Card - With cards drawn
+     */
     public ArrayList<Card> draw(int qty){
         ArrayList<Card> drawn = new ArrayList<Card>();
         int range = cards.size();
@@ -55,6 +66,10 @@ public class Deck {
         return drawn;
     }
 
+    /**
+     * Adds deck image actor to stage
+     * @param gs [GameScreen]
+     */
     public void startgui(GameScreen gs){
         Image deckimg = new Image(new Texture("extradeck.jpg"));
         deckimg.setSize(Gdx.graphics.getWidth()/8, (int) (Gdx.graphics.getHeight()/5.3));

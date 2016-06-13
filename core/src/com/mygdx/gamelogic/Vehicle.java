@@ -25,6 +25,13 @@ public class Vehicle extends Card {
         this.apleft = attack_power;
     }
 
+    /**
+     *
+     * Checks vehicle has enough resources to be summoned and plays it if successful
+     * @param board - current player board
+     * @param mats - each material counter [order: metal, wood, glass, rubber]
+     * @return SimpleEntry with indexes to remove from board[tripulation cost] and materials consumed [material cost]
+     */
     public AbstractMap.SimpleEntry<ArrayList<Integer>, int[]> playvehicle(Card[] board, int[] mats){
         int minion_counter = 0;
         int cost_left_to_pay = trip_cost;
@@ -62,7 +69,10 @@ public class Vehicle extends Card {
     }
 
 
-
+    /**
+     *
+     * @return remaining/Complete turn attack power
+     */
     public int getAPLeft(){
         return this.apleft;
     }
