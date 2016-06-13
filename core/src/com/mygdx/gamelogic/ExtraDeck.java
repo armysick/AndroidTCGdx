@@ -26,6 +26,11 @@ public class ExtraDeck{
         //vehics.add(new Vehicle("vehic4", new CardEffect(0), new Texture("demominion2.jpg"), 4, 4, 4000));
     }
 
+    public void fill_extra_deck_2(){
+        vehics.add(new Vehicle("humanoid", new CardEffect(0), new Texture("humanoid.jpg"), 1, 0, 1000));
+        vehics.add(new Vehicle("humanoid", new CardEffect(0), new Texture("humanoid.jpg"), 1, 0, 1000));
+        vehics.add(new Vehicle("humanoid", new CardEffect(0), new Texture("humanoid.jpg"), 1, 0, 1000));
+    }
 
     public ArrayList<Vehicle> getVehics(){
         return this.vehics;

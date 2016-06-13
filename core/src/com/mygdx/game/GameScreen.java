@@ -60,18 +60,24 @@ public class GameScreen implements Screen {
     FillViewport viewport;
     ArrayList<Clickable> objects = new ArrayList<Clickable>();
     Deck MainDeck;
+    Deck RobotMainDeck;
     MaterialDeck MatDeck;
+    MaterialDeck RobotMatDeck;
     ExtraDeck extraDeck;
+    ExtraDeck RobotExtraDeck;
     Hand hand;
+    Hand RobotHand;
     Boss bosserino;
     Boss enemybosserino;
     boolean handExpandedFlag;
     boolean extraExpandedFlag;
     boolean attackFlag;
     boolean okay_to_select = false;
+    boolean playerturn = false;
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
     Card[] boardCards = new Card[4];
+    Card[] enemyBoardCards = new Card[4];
     ArrayList<Image> minionvehiczone = new ArrayList<Image>();
     ArrayList<Image> enemyminionvehiczone = new ArrayList<Image>();
     ArrayList<Image> expandedZones = new ArrayList<Image>();
@@ -260,8 +266,8 @@ public class GameScreen implements Screen {
             new_img_expand.setSize((int) (new_img.getWidth()*2.5), (int) (new_img.getHeight()*2.5));
             new_img2_expand.setSize((int) (new_img.getWidth()*2.5), (int) (new_img.getHeight()*2.5));
             new_img_expand.setPosition(exp_x_coord , hei - (new_img.getHeight()/2) - hei/5);
-            new_img2_expand.setPosition(Gdx.graphics.getWidth() - (exp_x_coord + new_img2.getWidth()), Gdx.graphics.getHeight() - (float)(0.7*new_img_expand.getY()));
-            new_img2_expand.rotateBy(180);
+            new_img2_expand.setPosition(Gdx.graphics.getWidth() - (float)2 * (exp_x_coord + new_img2.getWidth()), Gdx.graphics.getHeight() - (float)(1.5*new_img_expand.getY()));
+            //new_img2_expand.rotateBy(180);
             expandedEnemyZones.add(new_img2_expand);
             expandedZones.add(new_img_expand);
             //
@@ -379,6 +385,17 @@ public class GameScreen implements Screen {
             }
         });
         stage.addActor(deckimg);
+
+        //ROBOT
+
+        RobotMainDeck = new Deck();
+        RobotMainDeck.fill_deck_2();
+
+        RobotMatDeck = new MaterialDeck();
+        RobotMatDeck.fill_deck_1();
+
+        RobotExtraDeck = new ExtraDeck();
+        RobotExtraDeck.fill_extra_deck_2();
     }
     public void loadStartingHand(){
         //graphical
@@ -398,15 +415,20 @@ public class GameScreen implements Screen {
             }
         });
         hand = new Hand();
+        RobotHand = new Hand();
         objects.add(hand);
 
         ArrayList<Card> drawn = new ArrayList<Card>();
         //drawn = MainDeck.draw(bosserino.getStartHand());
-        drawn = MainDeck.draw(bosserino.getStartHand() + bosserino.getDraws());
-        ArrayList<Integer> milled = MatDeck.mill(bosserino.getMills());
+        drawn = MainDeck.draw(bosserino.getStartHand());
+        /*ArrayList<Integer> milled = MatDeck.mill(bosserino.getMills());
         handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
-        System.out.println("drew: " + drawn.size());
+        System.out.println("drew: " + drawn.size());*/
         hand.addCardsToHand(drawn);
+
+        // ROBOT SIDE
+        RobotHand.addCardsToHand(RobotMainDeck.draw(enemybosserino.getStartHand()));
+
     }
 
     // END LOADING
@@ -598,6 +620,40 @@ public class GameScreen implements Screen {
         }
     }
 
+
+    //ROBOT PLAYS
+
+    public void robotturn(){
+        if(RobotHand.getCards().size() > 0){
+            for(int i = 0; i < enemyBoardCards.length ; i++) {
+                if(enemyBoardCards[i] == null) {
+                    enemyBoardCards[i] = RobotHand.getCards().get(0);
+                    //handleEffects(hand.getCards().get(index).activateEffect()); NO NEED YET
+                    RobotHand.remove(0);
+                    if(RobotExtraDeck.getVehics().size() > 0){
+                        // RobotExtraDeck.getVehics().get(0).playvehicle(enemyBoardCards); Skipping it, no need to check anything @Robot
+                        /*enemyBoardCards[i] = null;
+                        minionvehiczone.get(indexes_to_remove.get(r)).remove();
+                        expandedZones.get(indexes_to_remove.get(r)).remove();
+                        minionvehiczone.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
+                        expandedZones.get(indexes_to_remove.get(r)).setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("cardzone.jpg"))));
+                        stage.addActor(minionvehiczone.get(indexes_to_remove.get(r)));*/
+                        enemyminionvehiczone.get(i).remove();
+                        expandedEnemyZones.get(i).remove();
+                        Texture texturino = RobotExtraDeck.getVehics().get(0).getImage();
+                        enemyminionvehiczone.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(texturino)));
+                        expandedEnemyZones.get(i).setDrawable(new TextureRegionDrawable(new TextureRegion(texturino)));
+                        stage.addActor(enemyminionvehiczone.get(i));
+                        enemyBoardCards[i] = RobotExtraDeck.getVehics().get(0);
+                        RobotExtraDeck.remove(0);
+                    }
+                    playerturn = true;
+                    break;
+                }
+            }
+
+        }
+    }
     //
     public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
         expandSpriteList.clear();
@@ -655,11 +711,15 @@ public class GameScreen implements Screen {
 
 
         // Hand + Extra deck expanding and playing
-        if(attackFlag){
-            handleTargets();
+        if(playerturn) {
+            if (attackFlag) {
+                handleTargets();
+            } else {
+                expandStatusAndCardPlaying();
+            }
         }
-        else {
-            expandStatusAndCardPlaying();
+        else{
+            robotturn();
         }
         // End Hand + Extra Deck Expanding and Playing
 

@@ -61,6 +61,8 @@ public class Vehicle extends Card {
 
     }
 
+
+
     public int getAPLeft(){
         return this.apleft;
     }

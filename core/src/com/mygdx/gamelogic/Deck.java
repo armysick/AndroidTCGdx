@@ -29,6 +29,13 @@ public class Deck {
         cards.add(new Minion("handysoldier", new CardEffect(3), new Texture("handysoldier.jpg")));
     }
 
+    public void fill_deck_2(){
+        cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
+    }
+
     public ArrayList<Card> draw(int qty){
         ArrayList<Card> drawn = new ArrayList<Card>();
         int range = cards.size();
