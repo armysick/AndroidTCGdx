@@ -23,10 +23,10 @@ public class Deck {
         cards.add(new Minion("twinsoldier", new CardEffect(1), new Texture("twinsoldier.jpg")));
         cards.add(new Minion("pickaxesoldier", new CardEffect(2), new Texture("pickaxesoldier.jpg")));
         cards.add(new Minion("pickaxesoldier", new CardEffect(2), new Texture("pickaxesoldier.jpg")));
-        cards.add(new Minion("demo minion5", new CardEffect(0), new Texture("miniHand.jpg")));
-        cards.add(new Minion("demo minion6", new CardEffect(0), new Texture("miniHand.jpg")));
-        cards.add(new Minion("demo minion7", new CardEffect(0), new Texture("miniHand.jpg")));
-        cards.add(new Minion("demo minion8", new CardEffect(0), new Texture("highgeneralboss.jpg")));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
+        cards.add(new Minion("vanillasoldier", new CardEffect(0), new Texture("vanillasoldier.jpg")));
+        cards.add(new Minion("handysoldier", new CardEffect(3), new Texture("handysoldier.jpg")));
+        cards.add(new Minion("handysoldier", new CardEffect(3), new Texture("handysoldier.jpg")));
     }
 
     public ArrayList<Card> draw(int qty){

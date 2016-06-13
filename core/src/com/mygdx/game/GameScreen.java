@@ -536,7 +536,8 @@ public class GameScreen implements Screen {
             handleMill(milled.get(0), milled.get(1), milled.get(2), milled.get(3));
         }
         if(bs.getDrawn() != 0){
-            MainDeck.draw(bs.getDrawn());
+            ArrayList<Card> drawn = MainDeck.draw(bs.getDrawn());
+            hand.addCardsToHand(drawn);
         }
     }
 

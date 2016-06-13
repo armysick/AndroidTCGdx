@@ -15,6 +15,8 @@ public class CardEffect {
         switch(id) {
             case 2:  // pickaxesoldier
                 return pickaxesoldiereff();
+            case 3:
+                return handysoldiereff();
         }
         return new BoardState();
     }
@@ -22,6 +24,12 @@ public class CardEffect {
     public BoardState pickaxesoldiereff(){
         BoardState bs = new BoardState();
         bs.mill(1);
+        return bs;
+    }
+
+    public BoardState handysoldiereff(){
+        BoardState bs= new BoardState();
+        bs.draw(1);
         return bs;
     }
 }
