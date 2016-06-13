@@ -44,6 +44,7 @@ import java.util.ArrayList;
 public class GameScreen implements Screen {
     private final TCG game;
     private final Screen parentscr;
+    private Combat combat;
     Texture bgndTex;
     Image bgndImage;
     Image miniHand;
@@ -51,6 +52,7 @@ public class GameScreen implements Screen {
     Image enemyBosserinoImg;
     Image expandBosserino;
     Image enemyexpandBosserino;
+    Image attack_button;
     SpriteBatch batch = new SpriteBatch();
     Skin skin;
     Stage stage;
@@ -65,6 +67,7 @@ public class GameScreen implements Screen {
     Boss enemybosserino;
     boolean handExpandedFlag;
     boolean extraExpandedFlag;
+    boolean attackFlag;
     boolean okay_to_select = false;
     Sprite str;
     ArrayList<Sprite> expandSpriteList = new ArrayList<Sprite>();
@@ -86,6 +89,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
         stage = new Stage();
+        combat = new Combat();
 
         loadTextures();
         bgndImage.toBack();
@@ -97,9 +101,11 @@ public class GameScreen implements Screen {
         stage.addActor(bosserinoImg);
         stage.addActor(miniHand);
         stage.addActor(enemyBosserinoImg);
+        stage.addActor(attack_button);
 
         handExpandedFlag = false;
         extraExpandedFlag = false;
+        attackFlag = false;
 
 
         Gdx.input.setInputProcessor(stage);
@@ -191,6 +197,7 @@ public class GameScreen implements Screen {
 
     }
     public void loadTextures(){
+
         bgndTex = new Texture("boardbackground.jpg");
         bgndImage = new Image(bgndTex);
         bgndImage.setOrigin(0, 0);
@@ -322,6 +329,24 @@ public class GameScreen implements Screen {
             numberslbls.add(numberslbl);
             x_coord += (Gdx.graphics.getWidth()/8) + (int) (Gdx.graphics.getWidth()/22);
         }
+
+        //
+
+        //ATTACK button
+
+        attack_button = new Image (new Texture("attackbutton.jpg"));
+        attack_button.setSize(Gdx.graphics.getWidth()/12, Gdx.graphics.getHeight()/4);
+        attack_button.setPosition(5, Gdx.graphics.getHeight()/2 - (attack_button.getHeight()/2));
+        attack_button.toFront();
+        attack_button.addListener(new ClickListener(){
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y,int pointer, int button){
+                attackFlag = true;
+                return attackFlag;
+            }
+        });
+
 
 
     }
@@ -541,6 +566,27 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void handleTargets(){
+        if(Gdx.input.isTouched()){
+            int index = -9;
+            if((index = getZoneClickedFromCoords((int)Gdx.input.getX(), (int) (Gdx.graphics.getHeight() - Gdx.input.getY()))) != -9){
+                if(combat.getAttacker() == null){
+                    if(index > 0){
+                        if(boardCards[index-1] instanceof Vehicle)
+                            combat.setAttacker((Vehicle)boardCards[index-1]);
+                    }
+                }
+                else if(combat.getDefender() == null){
+                    if(index < 0 ){
+                        if(boardCards[Math.abs(index) - 1] instanceof Vehicle) {
+                            combat.setDefender((Vehicle) boardCards[Math.abs(index) - 1]);
+                            //TODO Combat calculations right here + add boss targetable
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     //
     public void expand(int hore){ // ExtraDeckExpand = 1 || HandExpand = 0
@@ -599,6 +645,9 @@ public class GameScreen implements Screen {
 
 
         // Hand + Extra deck expanding and playing
+        if(attackFlag){
+            handleTargets();
+        }
         expandStatusAndCardPlaying();
         // End Hand + Extra Deck Expanding and Playing
 
