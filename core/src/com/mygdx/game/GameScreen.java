@@ -208,7 +208,7 @@ public class GameScreen implements Screen {
     }
     public void loadTextures(){
 
-        bgndTex = new Texture("boardbackground.jpg");
+        bgndTex = new Texture("etbackground.jpg");
         bgndImage = new Image(bgndTex);
         bgndImage.setOrigin(0, 0);
         bgndImage.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -568,7 +568,7 @@ public class GameScreen implements Screen {
                 if(index > -1) {  // Player side
                     stage.addActor(expandedZones.get(index - 1));
                 }
-                else if(index <= -1 && index != -9){
+                else if(index <= -1 && index != -9 && index!=-420){
                     stage.addActor(expandedEnemyZones.get(Math.abs(index) - 1));
                 }
             }
